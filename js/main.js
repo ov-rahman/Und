@@ -1,4 +1,4 @@
-/* Better Call Rahman — сценарии страницы: слайдер, появление блоков, счётчики, отзывы, золотая пыль */
+/* Better Call Rahman — сценарии страницы: слайдер, появление блоков, счётчики, отзывы */
 (function () {
   'use strict';
 
@@ -205,86 +205,6 @@
     }, 8000);
   }
 
-  /* ---------- Золотая пыль в свете лампы (шапка) ---------- */
-
-  function initDust(canvas) {
-    if (reduceMotion || !canvas.getContext) return;
-    var ctx = canvas.getContext('2d');
-    var header = canvas.parentElement;
-    var dpr = Math.min(window.devicePixelRatio || 1, 2);
-    var w = 0;
-    var h = 0;
-    var motes = [];
-    var running = false;
-    var raf = null;
-
-    function resize() {
-      w = header.clientWidth;
-      h = header.clientHeight;
-      canvas.width = w * dpr;
-      canvas.height = h * dpr;
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    }
-
-    function makeMote(initial) {
-      return {
-        x: Math.random() * w,
-        y: initial ? Math.random() * h : h + 6,
-        r: 0.4 + Math.random() * 1.5,
-        vy: 0.05 + Math.random() * 0.16,
-        drift: Math.random() * Math.PI * 2,
-        twinkle: Math.random() * Math.PI * 2
-      };
-    }
-
-    function frame() {
-      ctx.clearRect(0, 0, w, h);
-      for (var k = 0; k < motes.length; k++) {
-        var m = motes[k];
-        m.y -= m.vy;
-        m.drift += 0.004;
-        m.twinkle += 0.02;
-        m.x += Math.sin(m.drift) * 0.12;
-        if (m.y < -6) motes[k] = makeMote(false);
-        var alpha = 0.18 + 0.32 * (0.5 + 0.5 * Math.sin(m.twinkle));
-        ctx.beginPath();
-        ctx.arc(m.x, m.y, m.r, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(230, 204, 150,' + alpha.toFixed(3) + ')';
-        ctx.fill();
-      }
-      raf = requestAnimationFrame(frame);
-    }
-
-    function start() {
-      if (running) return;
-      running = true;
-      raf = requestAnimationFrame(frame);
-    }
-
-    function stop() {
-      running = false;
-      cancelAnimationFrame(raf);
-    }
-
-    resize();
-    for (var n = 0; n < 48; n++) motes.push(makeMote(true));
-    window.addEventListener('resize', resize);
-
-    if ('IntersectionObserver' in window) {
-      new IntersectionObserver(function (entries) {
-        if (entries[0].isIntersecting && !document.hidden) start();
-        else stop();
-      }).observe(header);
-    } else {
-      start();
-    }
-
-    document.addEventListener('visibilitychange', function () {
-      if (document.hidden) stop();
-      else start();
-    });
-  }
-
   /* ---------- Запуск ---------- */
 
   var slider = document.querySelector('.slider');
@@ -292,9 +212,6 @@
 
   var testimonials = document.querySelector('.testimonials');
   if (testimonials) initQuotes(testimonials);
-
-  var dust = document.querySelector('.header__dust');
-  if (dust) initDust(dust);
 
   initReveal();
 })();
