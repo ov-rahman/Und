@@ -1,18 +1,17 @@
-/* Better Call Rahman — сценарии страницы: слайдер, появление блоков, счётчики, отзывы */
+/* Better Call Rahman — сценарии страницы: слайдер, появление блоков, счётчики, отзывы, подсветка карточек */
 (function () {
   'use strict';
 
   var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  /* ---------- Слайдер ---------- */
+  /* ---------- Слайдер с полосками-индикаторами ---------- */
 
   function initSlider(root) {
     var slides = [].slice.call(root.querySelectorAll('.slide'));
     if (slides.length < 2) return;
 
     var dots = [].slice.call(root.querySelectorAll('.slider__dot'));
-    var current = root.querySelector('[data-slider-current]');
-    var bar = root.querySelector('.slider__progress span');
+    var bars = dots.map(function (dot) { return dot.querySelector('span'); });
     var interval = 7000;
     var fade = 1800;
     var index = 0;
@@ -21,15 +20,14 @@
     var remaining = interval;
     var startedAt = 0;
 
-    function pad(n) {
-      return (n < 10 ? '0' : '') + n;
-    }
-
-    function resetBar() {
-      if (!bar) return;
-      bar.style.transition = 'none';
-      bar.style.transform = 'scaleX(0)';
-      void bar.offsetWidth;
+    /* пройденные полоски заполнены, будущие пустые */
+    function resetBars() {
+      bars.forEach(function (bar, k) {
+        if (!bar) return;
+        bar.style.transition = 'none';
+        bar.style.transform = k < index || (reduceMotion && k === index) ? 'scaleX(1)' : 'scaleX(0)';
+      });
+      if (bars[index]) void bars[index].offsetWidth;
     }
 
     function startTimer(ms) {
@@ -37,6 +35,7 @@
       if (reduceMotion) return;
       startedAt = Date.now();
       remaining = ms;
+      var bar = bars[index];
       if (bar) {
         bar.style.transition = 'transform ' + ms + 'ms linear';
         bar.style.transform = 'scaleX(1)';
@@ -65,9 +64,8 @@
       dots.forEach(function (dot, k) {
         dot.setAttribute('aria-current', k === index ? 'true' : 'false');
       });
-      if (current) current.textContent = pad(index + 1);
 
-      resetBar();
+      resetBars();
       if (paused) {
         remaining = interval;
       } else {
@@ -80,6 +78,7 @@
       paused = true;
       clearTimeout(timer);
       remaining = Math.max(0, remaining - (Date.now() - startedAt));
+      var bar = bars[index];
       if (bar) {
         var matrix = getComputedStyle(bar).transform;
         bar.style.transition = 'none';
@@ -133,10 +132,11 @@
       touchX = null;
     });
 
+    resetBars();
     startTimer(interval);
   }
 
-  /* ---------- Счётчики в бухгалтерской книге ---------- */
+  /* ---------- Счётчики ---------- */
 
   function formatNumber(n) {
     return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
@@ -205,6 +205,18 @@
     }, 8000);
   }
 
+  /* ---------- Мягкая подсветка карточек за курсором ---------- */
+
+  function initSpotlight() {
+    [].slice.call(document.querySelectorAll('.spot')).forEach(function (el) {
+      el.addEventListener('pointermove', function (e) {
+        var r = el.getBoundingClientRect();
+        el.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+        el.style.setProperty('--my', (e.clientY - r.top) + 'px');
+      });
+    });
+  }
+
   /* ---------- Запуск ---------- */
 
   var slider = document.querySelector('.slider');
@@ -213,5 +225,6 @@
   var testimonials = document.querySelector('.testimonials');
   if (testimonials) initQuotes(testimonials);
 
+  initSpotlight();
   initReveal();
 })();
