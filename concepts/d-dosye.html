@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Досье · Better Call Rahman</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&amp;family=PT+Serif:wght@400;700&amp;family=Oswald:wght@500;600&amp;display=swap">
+<style>
+  :root {
+    color-scheme: dark;
+    --desk: #16050a;
+    --folder: #5a1325;
+    --folder-2: #6b1a2e;
+    --folder-edge: #3f0c19;
+    --paper: #ede3d2;
+    --paper-2: #e2d4bd;
+    --ink: #231a17;
+    --ink-2: #5b4b43;
+    --stamp: #b4233b;
+    --bone: #f4ebe2;
+    --f-type: "IBM Plex Mono", "Courier New", monospace;
+    --f-serif: "PT Serif", Georgia, serif;
+    --f-stamp: "Oswald", "Arial Narrow", sans-serif;
+    --ease: cubic-bezier(.16, 1, .3, 1);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; padding-block: 24px 48px; background: radial-gradient(80% 60% at 50% 10%, #2a0a12, var(--desk) 70%) fixed, var(--desk); color: var(--ink); font: 400 15px/1.65 var(--f-type); -webkit-font-smoothing: antialiased; }
+  img { display: block; max-width: 100%; }
+  a { color: inherit; }
+  h1, h2, h3, p, figure, ol, ul { margin: 0; }
+  :focus-visible { outline: 2px solid var(--stamp); outline-offset: 3px; }
+
+  .page { width: 1000px; margin: 0 auto; }
+
+  /* закладки папки = меню */
+  .tabs { display: flex; gap: 6px; margin: 0; padding: 0 26px; list-style: none; }
+  .tabs a { display: block; padding: 12px 20px 10px; border-radius: 14px 14px 0 0; background: var(--folder-edge); color: rgba(244, 235, 226, .7); font: 600 13px/1 var(--f-stamp); letter-spacing: .12em; text-transform: uppercase; text-decoration: none; transform: translateY(4px); transition: transform .6s var(--ease), background-color .6s var(--ease), color .6s var(--ease); }
+  .tabs a:hover { transform: translateY(0); color: var(--bone); }
+  .tabs a[aria-current="page"] { background: var(--folder); color: var(--bone); transform: none; }
+  .tabs .tab-cta { background: var(--paper); color: var(--ink); }
+  .tabs .tab-cta:hover { color: var(--ink); background: #fff; }
+
+  .folder { position: relative; padding: 34px; border-radius: 0 24px 24px 24px; background: linear-gradient(160deg, var(--folder-2), var(--folder) 45%, #4c0f1f); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .08), 0 40px 90px rgba(0, 0, 0, .6); }
+  .folder::before { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; opacity: .25; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.7' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E"); mix-blend-mode: multiply; }
+
+  .sheet { position: relative; background: var(--paper); border-radius: 6px; box-shadow: 0 1px 0 rgba(255, 255, 255, .5) inset, 0 18px 40px rgba(20, 3, 8, .45); }
+  .js .sheet { opacity: 0; transform: translateY(26px) rotate(var(--r, 0deg)); transition: opacity 1.2s var(--ease), transform 1.4s var(--ease); transition-delay: var(--d, 0s); }
+  .js .sheet.is-in { opacity: 1; transform: rotate(var(--r, 0deg)); }
+
+  .stamp { position: absolute; display: inline-block; padding: 8px 14px; border: 3px solid var(--stamp); border-radius: 8px; color: var(--stamp); font: 600 20px/1 var(--f-stamp); letter-spacing: .14em; text-transform: uppercase; mix-blend-mode: multiply; opacity: .85; transform: rotate(var(--sr, -10deg)); }
+  .js .stamp[data-slam] { opacity: 0; transform: rotate(var(--sr, -10deg)) scale(1.8); transition: opacity .35s ease-out, transform .5s cubic-bezier(.2, 1.4, .4, 1); }
+  .js .is-in .stamp[data-slam] { opacity: .85; transform: rotate(var(--sr, -10deg)) scale(1); transition-delay: .9s; }
+
+  /* обложка дела */
+  .cover { display: grid; grid-template-columns: 1fr 1.25fr; gap: 28px; align-items: start; }
+  .label-card { --r: -1.2deg; padding: 28px 30px 30px; }
+  .label-card .no { font: 600 13px/1 var(--f-stamp); letter-spacing: .2em; text-transform: uppercase; color: var(--ink-2); }
+  .label-card h1 { margin: 14px 0 12px; font: 700 44px/1.02 var(--f-serif); letter-spacing: -.01em; }
+  .label-card p { color: var(--ink-2); }
+  .fields { display: grid; gap: 10px; margin-top: 22px; }
+  .fields div { display: flex; gap: 10px; align-items: baseline; font-size: 13px; }
+  .fields dt { color: var(--ink-2); white-space: nowrap; }
+  .fields dd { flex: 1; margin: 0; border-bottom: 1px solid rgba(35, 26, 23, .35); font-weight: 500; }
+  .label-card .stamp { right: 22px; bottom: -18px; --sr: -8deg; background: rgba(237, 227, 210, .4); }
+
+  /* фотоматериалы = слайдер */
+  .photos { --r: 1.4deg; padding: 22px 22px 18px; background: var(--paper-2); }
+  .clip { position: absolute; top: -16px; left: 44px; width: 22px; height: 58px; border: 3px solid #9aa0a6; border-radius: 12px; z-index: 3; }
+  .clip::after { content: ""; position: absolute; left: 3px; right: 3px; top: 8px; bottom: 12px; border: 3px solid #9aa0a6; border-radius: 8px; }
+  .polaroid { position: relative; padding: 10px 10px 0; background: #fbf7ef; box-shadow: 0 8px 18px rgba(20, 3, 8, .25); }
+  .polaroid .frame { position: relative; height: 290px; overflow: hidden; background: #111; }
+  .slide { position: absolute; inset: 0; opacity: 0; transition: opacity 1.4s var(--ease); }
+  .slide.is-active { opacity: 1; }
+  .slide img { width: 100%; height: 100%; object-fit: cover; filter: sepia(.25) contrast(1.05); transform: scale(1.05); }
+  .slide.is-active img { animation: kb 9s linear both; }
+  .polaroid p { padding: 10px 4px 12px; font-size: 13.5px; min-height: 48px; }
+  .photo-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; font-size: 13px; color: var(--ink-2); }
+  .photo-nav button { display: inline-flex; align-items: center; gap: 6px; padding: 8px 12px; border: 1px solid rgba(35, 26, 23, .35); border-radius: 999px; background: transparent; font: 500 13px/1 var(--f-type); color: var(--ink); cursor: pointer; transition: background-color .5s var(--ease); }
+  .photo-nav button:hover { background: rgba(35, 26, 23, .08); }
+  .photo-nav svg { width: 14px; height: 14px; }
+
+  /* справка с тайной */
+  .row { display: grid; grid-template-columns: 1.3fr 1fr; gap: 28px; margin-top: 30px; }
+  .report { --r: -.6deg; padding: 34px 36px 40px; }
+  .report h2, .inventory h2, .blank h2 { margin-bottom: 16px; font: 700 26px/1.1 var(--f-serif); }
+  .report p + p { margin-top: 12px; }
+  .redact { position: relative; cursor: pointer; white-space: nowrap; }
+  .redact::after { content: ""; position: absolute; left: -2px; right: -2px; top: 2px; bottom: 1px; background: var(--ink); border-radius: 2px; transform-origin: right; transition: transform 1s var(--ease); }
+  .redact:hover::after, .redact.is-open::after { transform: scaleX(0); }
+  .hint { margin-top: 16px; font-size: 12px; color: var(--ink-2); font-style: italic; }
+  .report .stamp { right: 26px; top: 26px; --sr: 12deg; font-size: 24px; }
+
+  .inventory { --r: .8deg; padding: 34px 30px 36px; background: var(--paper-2); }
+  .inventory ol { display: grid; gap: 14px; padding: 0; list-style: none; counter-reset: n; }
+  .inventory li { counter-increment: n; display: grid; grid-template-columns: 26px 1fr; gap: 8px; }
+  .inventory li::before { content: counter(n) "."; color: var(--stamp); font-weight: 600; }
+  .inventory b { font-weight: 600; }
+  .inventory span { display: block; font-size: 13px; color: var(--ink-2); }
+
+  /* вещдоки */
+  .evidence { margin-top: 38px; }
+  .evidence h2 { margin: 0 0 22px 6px; font: 600 16px/1 var(--f-stamp); letter-spacing: .2em; text-transform: uppercase; color: var(--bone); }
+  .board { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 26px; }
+  .card { position: relative; padding: 10px 10px 14px; background: #fbf7ef; transform: rotate(var(--r)); box-shadow: 0 16px 30px rgba(20, 3, 8, .45); transition: transform 1s var(--ease), box-shadow 1s var(--ease); }
+  .card:hover { transform: rotate(0) translateY(-6px) scale(1.02); box-shadow: 0 26px 40px rgba(20, 3, 8, .55); }
+  .card::before { content: ""; position: absolute; left: 50%; top: -10px; width: 86px; height: 24px; margin-left: -43px; background: rgba(226, 212, 189, .75); transform: rotate(-4deg); box-shadow: 0 1px 2px rgba(0, 0, 0, .2); }
+  .card img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; filter: sepia(.2); }
+  .card p { margin-top: 10px; font-size: 13px; }
+  .card b { color: var(--stamp); }
+
+  /* бланк */
+  .blank { --r: -.8deg; display: grid; grid-template-columns: 1fr auto; gap: 28px; align-items: end; margin-top: 42px; padding: 34px 36px; }
+  .blank .lines { display: grid; gap: 16px; margin-top: 8px; }
+  .blank .lines div { display: flex; gap: 12px; font-size: 13px; }
+  .blank .lines span { flex: 1; border-bottom: 1px dashed rgba(35, 26, 23, .5); }
+  .btn { display: inline-flex; align-items: center; gap: 10px; padding: 16px 26px; border-radius: 999px; background: var(--folder); color: var(--bone); font: 600 13px/1 var(--f-stamp); letter-spacing: .14em; text-transform: uppercase; text-decoration: none; box-shadow: 0 10px 24px rgba(90, 19, 37, .35); transition: transform .4s var(--ease), background-color .5s var(--ease); }
+  .btn:hover { background: var(--stamp); transform: translateY(-2px); }
+  .btn:active { transform: scale(.97); }
+
+  .footer { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 16px 28px; margin-top: 40px; padding-top: 22px; border-top: 1px dashed rgba(244, 235, 226, .3); color: rgba(244, 235, 226, .75); font-size: 13px; }
+  .footer strong { display: block; font: 600 30px/1 var(--f-stamp); letter-spacing: .1em; text-transform: uppercase; color: var(--bone); }
+  .footer ul { display: flex; flex-wrap: wrap; gap: 4px 16px; padding: 0; list-style: none; }
+  .footer a { text-decoration: none; }
+  .footer a:hover { color: var(--bone); }
+
+  @keyframes kb { from { transform: scale(1.05); } to { transform: scale(1.12); } }
+
+  @media (max-width: 1040px) { body { padding: 12px 10px 36px; } .page { width: auto; } }
+  @media (max-width: 760px) {
+    .tabs { flex-wrap: wrap; padding: 0 10px; gap: 4px; }
+    .tabs a { padding: 10px 12px 8px; font-size: 11px; }
+    .folder { padding: 20px 14px; border-radius: 0 18px 18px 18px; }
+    .cover, .row, .blank { grid-template-columns: 1fr; }
+    .label-card h1 { font-size: 34px; }
+    .polaroid .frame { height: 220px; }
+    .board { grid-template-columns: 1fr; gap: 30px; }
+    .report, .inventory, .blank { padding: 26px 20px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+    .js .sheet { opacity: 1; transform: rotate(var(--r, 0deg)); }
+    .js .stamp[data-slam] { opacity: .85; transform: rotate(var(--sr, -10deg)); }
+  }
+</style>
+<script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+<div class="page">
+
+  <nav aria-label="Главное меню">
+    <ul class="tabs">
+      <li><a href="#" aria-current="page">Главная</a></li>
+      <li><a href="#">Новости</a></li>
+      <li><a href="#">Услуги</a></li>
+      <li><a href="#">Контакты</a></li>
+      <li><a class="tab-cta" href="#">Регистрация</a></li>
+    </ul>
+  </nav>
+
+  <main class="folder">
+    <div class="cover">
+      <section class="sheet label-card" style="--d:.1s">
+        <p class="no">Дело № 7/1994</p>
+        <h1>Better Call Rahman</h1>
+        <p>Адвокатская контора Рахмана Султановича. Уголовная защита, налоги, семейный бизнес и вопросы, о которых не пишут в газетах.</p>
+        <dl class="fields">
+          <div><dt>Адвокат:</dt><dd>Рахман Султанович</dd></div>
+          <div><dt>Практика с:</dt><dd>1994 года</dd></div>
+          <div><dt>Телефон:</dt><dd>+7 (000) 707-07-07</dd></div>
+        </dl>
+        <span class="stamp" data-slam>Хранить вечно</span>
+      </section>
+
+      <section class="sheet photos" style="--d:.3s" aria-label="Фотоматериалы">
+        <span class="clip" aria-hidden="true"></span>
+        <div class="polaroid">
+          <div class="frame">
+            <div class="slide is-active" data-cap="Фото 1. Кабинет адвоката. Улик не обнаружено."><img src="../img/slide-office.jpg" alt="Кабинет адвоката"></div>
+            <div class="slide" data-cap="Фото 2. Адвокат. Лицо в кадр не попало. Случайно."><img src="../img/slide-lawyer.jpg" alt="Адвокат со спины"></div>
+            <div class="slide" data-cap="Фото 3. Весы. Показания сбалансированы."><img src="../img/slide-scales.jpg" alt="Весы правосудия"></div>
+            <div class="slide" data-cap="Фото 4. Здание суда. Машина подана к девяти."><img src="../img/slide-courthouse.jpg" alt="Здание суда"></div>
+          </div>
+          <p data-caption>Фото 1. Кабинет адвоката. Улик не обнаружено.</p>
+        </div>
+        <div class="photo-nav">
+          <button type="button" data-prev><svg viewBox="0 0 256 256" fill="currentColor"><path d="M164.24,203.76a6,6,0,1,1-8.48,8.48l-80-80a6,6,0,0,1,0-8.48l80-80a6,6,0,0,1,8.48,8.48L88.49,128Z"/></svg>Пред.</button>
+          <span data-count>1 из 4</span>
+          <button type="button" data-next>След.<svg viewBox="0 0 256 256" fill="currentColor"><path d="M180.24,132.24l-80,80a6,6,0,0,1-8.48-8.48L167.51,128,91.76,52.24a6,6,0,0,1,8.48-8.48l80,80A6,6,0,0,1,180.24,132.24Z"/></svg></button>
+        </div>
+      </section>
+    </div>
+
+    <div class="row">
+      <section class="sheet report" style="--d:.1s">
+        <h2>Справка</h2>
+        <p>Контора основана в 1994 году. За это время адвокат провёл <span class="redact" tabindex="0">1 214 дел</span> и выиграл <span class="redact" tabindex="0">все, о которых можно говорить</span>.</p>
+        <p>Клиентов, давших показания: 0. Местонахождение архива: <span class="redact" tabindex="0">не ваше дело</span>.</p>
+        <p>Всё сказанное в кабинете остаётся между клиентом, адвокатом и <span class="redact" tabindex="0">адвокатской тайной</span>.</p>
+        <p class="hint">Наведите или нажмите на чёрную полосу, чтобы прочитать.</p>
+        <span class="stamp" data-slam>Оправдан</span>
+      </section>
+
+      <section class="sheet inventory" style="--d:.25s">
+        <h2>Опись услуг</h2>
+        <ol>
+          <li><div><b>Уголовная защита</b><span>От первого допроса до оправдательного приговора.</span></div></li>
+          <li><div><b>Налоги и финансы</b><span>Объясним налоговой, откуда деньги.</span></div></li>
+          <li><div><b>Семейный бизнес</b><span>Когда партнёры приходятся друг другу родственниками.</span></div></li>
+          <li><div><b>Деликатные вопросы</b><span>Свидетели, которые передумали. По запросу.</span></div></li>
+        </ol>
+      </section>
+    </div>
+
+    <section class="evidence">
+      <h2>Вещественные доказательства</h2>
+      <div class="board">
+        <figure class="card" style="--r:-2.5deg"><img src="../img/details/ring.jpg" alt="Золотой перстень"><p><b>Вещдок № 1.</b> Перстень. Принадлежит клиенту. Или адвокату.</p></figure>
+        <figure class="card" style="--r:1.8deg"><img src="../img/details/coins.jpg" alt="Монеты на весах"><p><b>Вещдок № 2.</b> Аргументы. Весомые.</p></figure>
+        <figure class="card" style="--r:-1.2deg"><img src="../img/details/car.jpg" alt="Чёрный автомобиль"><p><b>Вещдок № 3.</b> Автомобиль. Ждёт у входа в суд.</p></figure>
+      </div>
+    </section>
+
+    <section class="sheet blank" style="--d:.1s">
+      <div>
+        <h2>Бланк клиента</h2>
+        <div class="lines">
+          <div>Имя пользователя <span></span></div>
+          <div>Логин <span></span></div>
+          <div>E-mail <span></span></div>
+        </div>
+      </div>
+      <a class="btn" href="#">Заполнить бланк</a>
+    </section>
+
+    <footer class="footer">
+      <div><strong>Дело закрыто</strong>Учебный проект, вариант 7. Все персонажи вымышлены.</div>
+      <ul><li><a href="#">Главная</a></li><li><a href="#">Новости</a></li><li><a href="#">Услуги</a></li><li><a href="#">Контакты</a></li><li><a href="#">Регистрация</a></li></ul>
+    </footer>
+  </main>
+</div>
+
+<script>
+(function () {
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var slides = [].slice.call(document.querySelectorAll('.photos .slide'));
+  var cap = document.querySelector('[data-caption]'), cnt = document.querySelector('[data-count]');
+  var i = 0, timer;
+  function show(n) {
+    slides[i].classList.remove('is-active');
+    i = (n + slides.length) % slides.length;
+    slides[i].classList.add('is-active');
+    cap.textContent = slides[i].dataset.cap; cnt.textContent = (i + 1) + ' из ' + slides.length;
+    clearTimeout(timer); if (!reduce) timer = setTimeout(function () { show(i + 1); }, 6000);
+  }
+  document.querySelector('[data-prev]').onclick = function () { show(i - 1); };
+  document.querySelector('[data-next]').onclick = function () { show(i + 1); };
+  if (!reduce) timer = setTimeout(function () { show(1); }, 6000);
+
+  [].slice.call(document.querySelectorAll('.redact')).forEach(function (r) {
+    r.addEventListener('click', function () { r.classList.toggle('is-open'); });
+    r.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); r.classList.toggle('is-open'); } });
+  });
+
+  var sheets = [].slice.call(document.querySelectorAll('.sheet'));
+  if ('IntersectionObserver' in window && !reduce) {
+    var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); } }); }, { threshold: .15 });
+    sheets.forEach(function (s) { io.observe(s); });
+  } else sheets.forEach(function (s) { s.classList.add('is-in'); });
+})();
+</script>
+</body>
+</html>

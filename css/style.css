@@ -1,0 +1,911 @@
+/* ==========================================================
+   Better Call Rahman. Адвокатская контора Рахмана Султановича.
+
+   Дизайн собран по скиллам frontend-design (Anthropic),
+   design-taste-frontend и high-end-visual-design (Taste Skill)
+   и дизайн-системе Apple (.claude/design-references).
+
+   Принципы:
+   - фотография главная, интерфейс не спорит с ней;
+   - блоки идут встык, раздел отделяет смена оттенка бордо;
+   - один акцент для действий: светлая «кость»;
+   - скругления по правилу: страница 28px, фото 18px, кнопки пилюлей;
+   - движение только там, где оно что-то сообщает.
+   ========================================================== */
+
+:root {
+  color-scheme: dark;
+
+  --backdrop: #14030a;
+  --claret: #2a0812;
+  --claret-2: #330a17;
+  --velvet: #5b1226;
+  --deep: #1c050c;
+  --bone: #f3ebe4;
+  --mist: #c9a7ad;
+  --line: rgba(243, 235, 228, .12);
+
+  --font-display: "Wix Madefor Display", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-text: "Wix Madefor Text", system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  --ease: cubic-bezier(.32, .72, 0, 1);
+  --ease-soft: cubic-bezier(.16, 1, .3, 1);
+
+  --page-width: 1000px;
+  --radius-page: 28px;
+  --radius-media: 18px;
+  --pad-x: 72px;
+  --pad-y: 104px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  padding-block: 24px 48px;
+  font-family: var(--font-text);
+  font-size: 17px;
+  line-height: 1.55;
+  letter-spacing: -.01em;
+  color: var(--bone);
+  background: var(--backdrop);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* плёночное зерно поверх всего, как на кадрах в слайдере */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  pointer-events: none;
+  opacity: .06;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--bone);
+  outline-offset: 3px;
+}
+
+h1,
+h2,
+h3,
+p,
+blockquote,
+figure {
+  margin: 0;
+}
+
+.skip-link {
+  position: absolute;
+  left: 16px;
+  top: -60px;
+  z-index: 40;
+  padding: 10px 16px;
+  border-radius: 999px;
+  background: var(--bone);
+  color: var(--claret);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.skip-link:focus {
+  top: 16px;
+}
+
+/* ---------- Основной блок: 1000px по центру ---------- */
+
+.page {
+  width: var(--page-width);
+  margin: 0 auto;
+  border-radius: var(--radius-page);
+  overflow: clip;
+  background: var(--claret);
+  box-shadow: 0 40px 100px rgba(8, 1, 3, .6);
+}
+
+/* ---------- Шапка ---------- */
+
+.header {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  height: 64px;
+  padding: 0 24px 0 32px;
+  background: rgba(42, 8, 18, .8);
+  -webkit-backdrop-filter: saturate(160%) blur(20px);
+  backdrop-filter: saturate(160%) blur(20px);
+  box-shadow: 0 1px 0 var(--line);
+  animation: fade 1s var(--ease-soft) both;
+}
+
+.wordmark {
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -.02em;
+  line-height: 1;
+  color: var(--bone);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.nav a {
+  display: inline-block;
+  padding: 8px 12px;
+  border-radius: 999px;
+  font-size: 14px;
+  line-height: 1.3;
+  color: var(--mist);
+  text-decoration: none;
+  transition: color .5s var(--ease);
+}
+
+.nav a:hover,
+.nav a[aria-current="page"] {
+  color: var(--bone);
+}
+
+.nav a[aria-current="page"] {
+  font-weight: 600;
+}
+
+.nav .nav__cta {
+  margin-left: 12px;
+  padding: 9px 18px;
+  font-weight: 600;
+  color: var(--claret);
+  background: var(--bone);
+  transition: background-color .5s var(--ease), transform .3s var(--ease);
+}
+
+.nav .nav__cta:hover {
+  color: var(--claret);
+  background: #fff;
+}
+
+.nav .nav__cta:active {
+  transform: scale(.97);
+}
+
+/* ---------- Слайдер ---------- */
+
+.hero {
+  position: relative;
+  height: 430px;
+  overflow: hidden;
+  background: var(--deep);
+}
+
+.slides {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 1.6s var(--ease-soft), visibility 0s linear 1.6s;
+}
+
+.slide.is-active {
+  z-index: 1;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 1.6s var(--ease-soft), visibility 0s;
+}
+
+.slide__media {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+/* первый кадр при загрузке наводится на резкость */
+.slide:first-child .slide__media {
+  animation: focus-in 2.4s var(--ease-soft) both;
+}
+
+.slide__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.03);
+  transform-origin: var(--origin, 60% 50%);
+}
+
+/* медленный наезд камеры; уходящий кадр доигрывает движение */
+.slide.is-active .slide__img,
+.slide.is-leaving .slide__img {
+  animation: ken-burns 10s linear both;
+}
+
+.slide::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(28, 5, 12, .82) 0%, rgba(28, 5, 12, .4) 45%, rgba(28, 5, 12, 0) 75%),
+    linear-gradient(0deg, rgba(28, 5, 12, .7) 0%, rgba(28, 5, 12, 0) 45%);
+}
+
+.slide__caption {
+  position: absolute;
+  z-index: 1;
+  left: 56px;
+  right: 56px;
+  bottom: 52px;
+  display: grid;
+  gap: 12px;
+}
+
+/* текст поднимается из-под невидимой кромки, как занавес */
+.mask {
+  overflow: hidden;
+  padding-bottom: .14em;
+}
+
+.mask > span {
+  display: block;
+  transform: translateY(110%);
+}
+
+.slide.is-active .mask > span {
+  animation: lift 1.4s var(--ease-soft) .35s both;
+}
+
+.slide.is-active .mask + .mask > span {
+  animation-delay: .6s;
+}
+
+.slide.is-leaving .mask > span {
+  transform: none;
+}
+
+.slide__title {
+  font-family: var(--font-display);
+  font-size: 52px;
+  font-weight: 600;
+  line-height: 1.04;
+  letter-spacing: -.035em;
+  text-wrap: balance;
+}
+
+.slide__title--brand {
+  font-size: 76px;
+  letter-spacing: -.045em;
+}
+
+.slide__text {
+  max-width: 30em;
+  font-size: 19px;
+  line-height: 1.45;
+  color: rgba(243, 235, 228, .8);
+}
+
+.hero__controls {
+  position: absolute;
+  z-index: 2;
+  right: 40px;
+  bottom: 48px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.hero__progress {
+  display: flex;
+  gap: 6px;
+  margin-right: 10px;
+}
+
+.hero__dot {
+  position: relative;
+  width: 22px;
+  height: 20px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.hero__dot::before,
+.hero__dot span {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 9px;
+  height: 2px;
+  border-radius: 2px;
+}
+
+.hero__dot::before {
+  background: rgba(243, 235, 228, .3);
+}
+
+.hero__dot span {
+  background: var(--bone);
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+.hero__btn {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  color: var(--bone);
+  background: rgba(243, 235, 228, .14);
+  cursor: pointer;
+  transition: background-color .5s var(--ease), transform .3s var(--ease);
+}
+
+.hero__btn:hover {
+  background: rgba(243, 235, 228, .26);
+}
+
+.hero__btn:active {
+  transform: scale(.94);
+}
+
+.hero__btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* ---------- Разделы идут встык, их отделяет смена оттенка ---------- */
+
+.tile {
+  padding: var(--pad-y) var(--pad-x);
+}
+
+.tile--claret {
+  background: var(--claret);
+}
+
+.tile--claret-2 {
+  background: var(--claret-2);
+}
+
+.tile--velvet {
+  background: var(--velvet);
+}
+
+.display {
+  font-family: var(--font-display);
+  font-size: 44px;
+  font-weight: 600;
+  line-height: 1.08;
+  letter-spacing: -.03em;
+  text-wrap: balance;
+}
+
+.muted {
+  color: var(--mist);
+}
+
+.text-link {
+  font-weight: 600;
+  color: var(--bone);
+  text-decoration: none;
+  background: linear-gradient(currentColor, currentColor) 0 100% / 100% 1px no-repeat;
+  padding-bottom: 2px;
+  transition: background-size .6s var(--ease);
+}
+
+.text-link:hover {
+  background-position: 100% 100%;
+  background-size: 0 1px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 15px 30px;
+  border: 0;
+  border-radius: 999px;
+  font-family: var(--font-text);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--claret);
+  background: var(--bone);
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color .5s var(--ease), transform .3s var(--ease);
+}
+
+.btn:hover {
+  background: #fff;
+}
+
+.btn:active {
+  transform: scale(.97);
+}
+
+/* О конторе */
+
+.intro h1 {
+  max-width: 12em;
+  font-family: var(--font-display);
+  font-size: 56px;
+  font-weight: 600;
+  line-height: 1.04;
+  letter-spacing: -.04em;
+  text-wrap: balance;
+}
+
+.intro__body {
+  display: grid;
+  gap: 18px;
+  max-width: 560px;
+  margin: 44px 0 0 26%;
+}
+
+.intro__lead {
+  font-size: 21px;
+  line-height: 1.45;
+  color: rgba(243, 235, 228, .92);
+}
+
+.signature {
+  display: grid;
+  margin-top: 14px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+}
+
+.signature strong {
+  font-weight: 600;
+}
+
+.signature span {
+  font-size: 15px;
+  color: var(--mist);
+}
+
+/* Фото, которое раскрывается при прокрутке */
+
+.photo {
+  overflow: hidden;
+  border-radius: var(--radius-media);
+  clip-path: inset(0 round var(--radius-media));
+}
+
+.photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.js .photo {
+  transition: clip-path 1.6s var(--ease-soft);
+}
+
+.js .photo img {
+  transform: scale(1.12);
+  transition: transform 2s var(--ease-soft);
+}
+
+.js .photo:not(.is-in) {
+  clip-path: inset(8% 8% 8% 8% round var(--radius-media));
+}
+
+.js .photo.is-in img {
+  transform: none;
+}
+
+/* Практика */
+
+.practice {
+  display: grid;
+  grid-template-columns: 340px minmax(0, 1fr);
+  gap: 64px;
+  align-items: start;
+}
+
+.practice .photo {
+  aspect-ratio: 1 / 1;
+}
+
+.services {
+  margin: 36px 0 32px;
+  padding: 0;
+  list-style: none;
+}
+
+.service {
+  padding: 22px 0;
+  border-top: 1px solid var(--line);
+}
+
+.service:first-child {
+  padding-top: 0;
+  border-top: 0;
+}
+
+.service h3 {
+  margin-bottom: 6px;
+  font-family: var(--font-display);
+  font-size: 21px;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -.02em;
+}
+
+.service p {
+  font-size: 16px;
+  color: var(--mist);
+}
+
+/* Цифры одной фразой: слова проявляются по мере чтения */
+
+.facts__text {
+  font-family: var(--font-display);
+  font-size: 40px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -.03em;
+  text-wrap: pretty;
+}
+
+.facts__text .w {
+  display: inline;
+}
+
+@supports (animation-timeline: view()) {
+  .js .facts__text {
+    view-timeline-name: --facts;
+    view-timeline-axis: block;
+  }
+
+  .js .facts__text .w {
+    animation: word-in linear both;
+    animation-timeline: --facts;
+    animation-range: cover calc(18% + var(--i) * 1.6%) cover calc(24% + var(--i) * 1.6%);
+  }
+}
+
+/* Правила дома */
+
+.rules ul {
+  display: grid;
+  gap: 26px;
+  margin: 44px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.rules li {
+  font-family: var(--font-display);
+  font-size: 30px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -.025em;
+  text-wrap: pretty;
+}
+
+.rules li span {
+  font-weight: 400;
+  color: var(--mist);
+}
+
+/* Отзыв */
+
+.quote {
+  text-align: center;
+}
+
+.quote blockquote {
+  max-width: 17em;
+  margin: 0 auto;
+  font-family: var(--font-display);
+  font-size: 42px;
+  font-weight: 600;
+  line-height: 1.14;
+  letter-spacing: -.03em;
+  text-wrap: balance;
+}
+
+.quote figcaption {
+  margin-top: 26px;
+  font-size: 15px;
+  color: rgba(243, 235, 228, .75);
+}
+
+/* Регистрация */
+
+.join .photo {
+  aspect-ratio: 856 / 380;
+  margin-bottom: 52px;
+}
+
+.join p {
+  max-width: 34ch;
+  margin: 16px 0 32px;
+  font-size: 19px;
+  line-height: 1.45;
+  color: var(--mist);
+}
+
+/* ---------- Подвал ---------- */
+
+.footer {
+  padding: 56px var(--pad-x) 36px;
+  font-size: 14px;
+  color: var(--mist);
+  background: var(--deep);
+}
+
+.footer__top {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr;
+  gap: 32px;
+}
+
+.footer__about p {
+  max-width: 30ch;
+  margin-top: 14px;
+}
+
+.footer h2 {
+  margin-bottom: 10px;
+  font-family: var(--font-text);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0;
+  color: var(--bone);
+}
+
+.footer ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  line-height: 2.1;
+}
+
+.footer a {
+  text-decoration: none;
+  transition: color .4s var(--ease);
+}
+
+.footer ul a:hover,
+.footer address a:hover {
+  color: var(--bone);
+}
+
+.footer address {
+  display: grid;
+  font-style: normal;
+  line-height: 2.1;
+}
+
+.footer__legal {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px 24px;
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+  font-size: 12px;
+}
+
+/* ---------- Анимации ---------- */
+
+@keyframes fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes lift {
+  from { transform: translateY(110%); }
+  to { transform: none; }
+}
+
+@keyframes focus-in {
+  from { filter: blur(12px) brightness(.45); transform: scale(1.04); }
+  to { filter: none; transform: none; }
+}
+
+@keyframes ken-burns {
+  from { transform: scale(1.03); }
+  to { transform: scale(1.1); }
+}
+
+@keyframes word-in {
+  from { opacity: .22; }
+  to { opacity: 1; }
+}
+
+/* ---------- Адаптивность ---------- */
+
+@media (max-width: 1040px) {
+  body {
+    padding: 16px 16px 40px;
+  }
+
+  .page {
+    width: auto;
+  }
+}
+
+@media (max-width: 760px) {
+  :root {
+    --pad-x: 22px;
+    --pad-y: 64px;
+    --radius-page: 24px;
+  }
+
+  body {
+    padding: 10px 10px 32px;
+    font-size: 16px;
+  }
+
+  .header {
+    position: static;
+    flex-direction: column;
+    height: auto;
+    gap: 8px;
+    padding: 18px 12px 12px;
+  }
+
+  .nav {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .nav .nav__cta {
+    margin-left: 4px;
+  }
+
+  .hero {
+    height: 500px;
+  }
+
+  .slide::after {
+    background: linear-gradient(0deg, rgba(28, 5, 12, .92) 0%, rgba(28, 5, 12, .55) 50%, rgba(28, 5, 12, .1) 100%);
+  }
+
+  .slide__caption {
+    left: 22px;
+    right: 22px;
+    bottom: 96px;
+  }
+
+  .slide__title {
+    font-size: 34px;
+  }
+
+  .slide__title--brand {
+    font-size: 46px;
+  }
+
+  .slide__text {
+    font-size: 17px;
+  }
+
+  .hero__controls {
+    left: 22px;
+    right: 22px;
+    bottom: 26px;
+    justify-content: flex-end;
+  }
+
+  .hero__progress {
+    margin-right: auto;
+  }
+
+  .intro h1 {
+    font-size: 38px;
+  }
+
+  .intro__body {
+    margin: 32px 0 0;
+  }
+
+  .intro__lead {
+    font-size: 19px;
+  }
+
+  .display {
+    font-size: 32px;
+  }
+
+  .practice {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 40px;
+  }
+
+  .facts__text {
+    font-size: 28px;
+  }
+
+  .rules li {
+    font-size: 22px;
+  }
+
+  .quote blockquote {
+    font-size: 28px;
+  }
+
+  .join .photo {
+    aspect-ratio: 4 / 3;
+  }
+
+  .footer__top {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .footer__about {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .mask > span {
+    transform: none;
+  }
+
+  .js .photo:not(.is-in) {
+    clip-path: inset(0 round var(--radius-media));
+  }
+
+  .js .photo img {
+    transform: none;
+  }
+
+  .js .facts__text .w {
+    animation: none;
+  }
+}

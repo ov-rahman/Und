@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Кино · Better Call Rahman</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fira+Sans+Extra+Condensed:wght@500;700;800&amp;family=Tenor+Sans&amp;family=Manrope:wght@400;500;600&amp;display=swap">
+<style>
+  :root {
+    color-scheme: dark;
+    --void: #050102;
+    --night: #0b0204;
+    --reel: #120408;
+    --wine: #7a1629;
+    --velvet: #4a0c18;
+    --bone: #f2e8de;
+    --muted: #a8959a;
+    --line: rgba(242, 232, 222, .12);
+    --f-poster: "Fira Sans Extra Condensed", "Arial Narrow", sans-serif;
+    --f-credit: "Tenor Sans", "Trebuchet MS", sans-serif;
+    --f-text: "Manrope", system-ui, sans-serif;
+    --ease: cubic-bezier(.16, 1, .3, 1);
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; padding-block: 24px 48px; background: var(--night); color: var(--bone); font: 400 16px/1.6 var(--f-text); -webkit-font-smoothing: antialiased; }
+  body::after { content: ""; position: fixed; inset: 0; z-index: 30; pointer-events: none; opacity: .08; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+  img { display: block; max-width: 100%; }
+  a { color: inherit; }
+  h1, h2, h3, p, figure, blockquote { margin: 0; }
+  :focus-visible { outline: 2px solid var(--bone); outline-offset: 3px; }
+
+  .page { width: 1000px; margin: 0 auto; background: var(--reel); border-radius: 22px; overflow: clip; box-shadow: 0 40px 100px rgba(0, 0, 0, .6); }
+
+  /* шапка */
+  .header { display: flex; align-items: center; justify-content: space-between; gap: 20px; height: 64px; padding: 0 28px; background: var(--void); border-bottom: 1px solid var(--line); }
+  .logo { font: 800 24px/1 var(--f-poster); letter-spacing: .05em; text-transform: uppercase; text-decoration: none; }
+  .logo span { color: var(--wine); }
+  .nav { display: flex; align-items: center; gap: 4px; margin: 0; padding: 0; list-style: none; }
+  .nav a { display: inline-block; padding: 8px 12px; font: 13px/1 var(--f-credit); letter-spacing: .16em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color .5s var(--ease); }
+  .nav a:hover, .nav a[aria-current="page"] { color: var(--bone); }
+  .nav .cta { margin-left: 8px; padding: 10px 18px; border: 1px solid rgba(242, 232, 222, .5); border-radius: 999px; color: var(--bone); transition: background-color .5s var(--ease), color .5s var(--ease); }
+  .nav .cta:hover { background: var(--bone); color: var(--void); }
+
+  /* экран с кашетированием */
+  .screen { position: relative; background: var(--void); }
+  .bar { display: flex; align-items: center; justify-content: space-between; gap: 16px; height: 46px; padding: 0 28px; font: 12px/1 var(--f-credit); letter-spacing: .18em; text-transform: uppercase; color: rgba(242, 232, 222, .6); }
+  .timecode { font-variant-numeric: tabular-nums; letter-spacing: .12em; }
+  .frame { position: relative; height: 430px; overflow: hidden; }
+  .slide { position: absolute; inset: 0; opacity: 0; visibility: hidden; transition: opacity 1.8s var(--ease), visibility 0s linear 1.8s; }
+  .slide.is-active { opacity: 1; visibility: visible; transition: opacity 1.8s var(--ease), visibility 0s; }
+  .slide img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.04); }
+  .slide.is-active img, .slide.is-leaving img { animation: kb 11s linear both; }
+  .frame::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse at center, transparent 45%, rgba(5, 1, 2, .75) 100%); }
+
+  /* вступительные титры на первом кадре */
+  .credits { position: absolute; inset: 0; z-index: 2; display: grid; place-items: center; text-align: center; pointer-events: none; transition: opacity 1.4s var(--ease); }
+  .credits.is-hidden { opacity: 0; }
+  .credits > * { grid-area: 1 / 1; }
+  .credits__pre, .credits__star { font: 15px/1.4 var(--f-credit); letter-spacing: .32em; text-transform: uppercase; color: rgba(242, 232, 222, .85); }
+  .credits__pre { animation: pre 3.4s var(--ease) .4s both; }
+  .credits__title { display: grid; justify-items: center; gap: 18px; }
+  .credits__title h1 { font: 800 96px/.9 var(--f-poster); text-transform: uppercase; letter-spacing: .04em; text-shadow: 0 6px 40px rgba(0, 0, 0, .6); animation: title-in 3.2s var(--ease) 3.4s both; }
+  .credits__star { animation: fade 1.8s var(--ease) 5.6s both; }
+
+  .subtitle { min-height: 46px; display: grid; place-items: center; padding: 0 28px; }
+  .subtitle p { font: 500 17px/1.35 var(--f-text); text-align: center; color: var(--bone); transition: opacity .8s var(--ease); }
+  .controls { position: absolute; z-index: 3; right: 22px; bottom: 60px; display: flex; gap: 8px; }
+  .controls button { width: 40px; height: 40px; border: 1px solid rgba(242, 232, 222, .45); border-radius: 50%; background: rgba(5, 1, 2, .4); color: var(--bone); display: grid; place-items: center; cursor: pointer; transition: background-color .5s var(--ease), color .5s var(--ease); }
+  .controls button:hover { background: var(--bone); color: var(--void); }
+  .controls svg { width: 16px; height: 16px; }
+
+  /* плёнка */
+  .strip-section { padding: 88px 0 96px; background: var(--night); }
+  .head { display: flex; align-items: end; justify-content: space-between; gap: 24px; padding: 0 56px 36px; }
+  .head h2 { font: 800 64px/.92 var(--f-poster); text-transform: uppercase; letter-spacing: .01em; }
+  .head p { max-width: 30ch; color: var(--muted); }
+  .strip { position: relative; overflow: hidden; padding: 26px 0; background: #070203; }
+  .strip::before, .strip::after { content: ""; position: absolute; left: 0; right: 0; height: 12px; background: repeating-linear-gradient(90deg, transparent 0 14px, rgba(242, 232, 222, .75) 14px 26px, transparent 26px 40px); opacity: .85; }
+  .strip::before { top: 7px; }
+  .strip::after { bottom: 7px; }
+  .reel { display: flex; gap: 14px; width: max-content; animation: roll 70s linear infinite; }
+  .strip:hover .reel { animation-play-state: paused; }
+  .reel figure { position: relative; width: 250px; height: 160px; overflow: hidden; border-radius: 6px; }
+  .reel img { width: 100%; height: 100%; object-fit: cover; filter: saturate(.9) contrast(1.05); transition: transform 1.6s var(--ease); }
+  .reel figure:hover img { transform: scale(1.08); }
+  .reel figcaption { position: absolute; left: 10px; bottom: 8px; font: 11px/1 var(--f-credit); letter-spacing: .16em; text-transform: uppercase; color: rgba(242, 232, 222, .85); text-shadow: 0 1px 6px #000; }
+
+  /* в ролях */
+  .cast { padding: 104px 56px; background: var(--reel); text-align: center; }
+  .cast h2 { font: 800 120px/.85 var(--f-poster); text-transform: uppercase; color: transparent; -webkit-text-stroke: 1px rgba(242, 232, 222, .45); letter-spacing: .02em; }
+  .cast__sub { margin-top: 18px; font: 13px/1.4 var(--f-credit); letter-spacing: .3em; text-transform: uppercase; color: var(--muted); }
+  .roles { display: grid; gap: 22px; max-width: 760px; margin: 64px auto 0; padding: 0; list-style: none; }
+  .roles li { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: baseline; }
+  .roles .role { text-align: right; font: 13px/1.4 var(--f-credit); letter-spacing: .22em; text-transform: uppercase; color: var(--muted); }
+  .roles .name { text-align: left; font: 700 30px/1.1 var(--f-poster); text-transform: uppercase; letter-spacing: .03em; }
+  .js .roles li { opacity: 0; transform: translateY(18px); transition: opacity 1.2s var(--ease), transform 1.2s var(--ease); transition-delay: calc(var(--i) * .14s); }
+  .js .roles.is-in li { opacity: 1; transform: none; }
+
+  /* сцена с субтитрами */
+  .scene { position: relative; background: var(--void); }
+  .scene img { width: 100%; height: 440px; object-fit: cover; object-position: 50% 45%; }
+  .scene figcaption { position: absolute; left: 0; right: 0; bottom: 34px; display: grid; justify-items: center; gap: 10px; padding: 0 60px; text-align: center; }
+  .scene blockquote { max-width: 26em; font: 600 26px/1.3 var(--f-text); text-shadow: 0 2px 2px #000, 0 0 24px rgba(0, 0, 0, .9); }
+  .scene cite { font: 12px/1 var(--f-credit); font-style: normal; letter-spacing: .24em; text-transform: uppercase; color: rgba(242, 232, 222, .75); }
+  .scene::before { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(5, 1, 2, .85), transparent 55%); }
+
+  /* премьера */
+  .premiere { display: grid; grid-template-columns: 1.1fr .9fr; gap: 48px; align-items: center; padding: 96px 56px; background: radial-gradient(120% 120% at 0% 0%, #6e1426 0%, var(--velvet) 45%, #230610 100%); }
+  .premiere h2 { font: 800 72px/.9 var(--f-poster); text-transform: uppercase; }
+  .premiere p { color: rgba(242, 232, 222, .82); font-size: 17px; }
+  .ticket { display: grid; gap: 18px; padding: 28px; border: 1px dashed rgba(242, 232, 222, .4); border-radius: 18px; background: rgba(5, 1, 2, .25); }
+  .ticket small { font: 12px/1.4 var(--f-credit); letter-spacing: .22em; text-transform: uppercase; color: rgba(242, 232, 222, .7); }
+  .btn { display: inline-flex; justify-content: center; padding: 16px 28px; border-radius: 999px; background: var(--bone); color: var(--void); font: 600 15px/1 var(--f-text); text-decoration: none; transition: transform .4s var(--ease), background-color .5s var(--ease); }
+  .btn:hover { background: #fff; transform: translateY(-2px); }
+  .btn:active { transform: scale(.97); }
+
+  /* конец */
+  .footer { padding: 72px 56px 36px; background: var(--void); }
+  .footer__end { font: 800 150px/.8 var(--f-poster); text-transform: uppercase; color: rgba(242, 232, 222, .08); letter-spacing: .02em; }
+  .footer__grid { display: grid; grid-template-columns: 1.3fr 1fr 1fr; gap: 28px; margin-top: 36px; font-size: 14px; color: var(--muted); }
+  .footer h3 { margin-bottom: 10px; font: 12px/1 var(--f-credit); letter-spacing: .2em; text-transform: uppercase; color: var(--bone); }
+  .footer ul { margin: 0; padding: 0; list-style: none; line-height: 2; }
+  .footer a { text-decoration: none; }
+  .footer a:hover { color: var(--bone); }
+  .footer__legal { margin-top: 36px; padding-top: 18px; border-top: 1px solid var(--line); font-size: 12px; color: var(--muted); }
+
+  @keyframes kb { from { transform: scale(1.04); } to { transform: scale(1.12); } }
+  @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes pre { 0% { opacity: 0; } 25%, 70% { opacity: 1; } 100% { opacity: 0; } }
+  @keyframes title-in { from { opacity: 0; letter-spacing: .5em; filter: blur(8px); } to { opacity: 1; letter-spacing: .04em; filter: none; } }
+  @keyframes roll { to { transform: translateX(-50%); } }
+
+  @media (max-width: 1040px) { body { padding: 12px 12px 36px; } .page { width: auto; } }
+  @media (max-width: 720px) {
+    .header { flex-direction: column; height: auto; padding: 16px 12px 10px; }
+    .nav { flex-wrap: wrap; justify-content: center; }
+    .nav a { padding: 8px 9px; font-size: 12px; letter-spacing: .1em; }
+    .bar { padding: 0 14px; font-size: 10px; letter-spacing: .12em; }
+    .frame { height: 360px; }
+    .credits__title h1 { font-size: 52px; }
+    .credits__pre, .credits__star { font-size: 11px; letter-spacing: .22em; padding: 0 16px; }
+    .subtitle p { font-size: 15px; }
+    .controls { bottom: 56px; right: 12px; }
+    .head { flex-direction: column; align-items: start; padding: 0 22px 28px; }
+    .head h2 { font-size: 46px; }
+    .reel figure { width: 190px; height: 124px; }
+    .cast { padding: 72px 22px; }
+    .cast h2 { font-size: 72px; }
+    .roles li { grid-template-columns: 1fr; gap: 4px; text-align: center; }
+    .roles .role, .roles .name { text-align: center; }
+    .roles .name { font-size: 26px; }
+    .scene img { height: 420px; }
+    .scene figcaption { padding: 0 20px; }
+    .scene blockquote { font-size: 20px; }
+    .premiere { grid-template-columns: 1fr; padding: 64px 22px; }
+    .premiere h2 { font-size: 52px; }
+    .footer { padding: 56px 22px 28px; }
+    .footer__end { font-size: 88px; }
+    .footer__grid { grid-template-columns: 1fr 1fr; }
+    .footer__grid > :first-child { grid-column: 1 / -1; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+    .js .roles li { opacity: 1; transform: none; }
+  }
+</style>
+<script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+<div class="page">
+
+  <header class="header">
+    <a class="logo" href="#">Better Call <span>Rahman</span></a>
+    <nav aria-label="Главное меню">
+      <ul class="nav">
+        <li><a href="#" aria-current="page">Главная</a></li>
+        <li><a href="#">Новости</a></li>
+        <li><a href="#">Услуги</a></li>
+        <li><a href="#">Контакты</a></li>
+        <li><a class="cta" href="#">Регистрация</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section class="screen" aria-label="Слайдер">
+    <div class="bar"><span data-slug>Инт. Кабинет Рахмана. Ночь</span><span class="timecode" data-timecode>00:00:00:00</span></div>
+    <div class="frame">
+      <div class="slide is-active" data-slug="Инт. Кабинет Рахмана. Ночь" data-sub=""><img src="../img/slide-office.jpg" srcset="../img/slide-office@2x.jpg 2x" alt="Кабинет адвоката ночью"></div>
+      <div class="slide" data-slug="Инт. Коридор конторы. Ночь" data-sub="Он не спрашивает, как это случилось. Он спрашивает, кто ещё знает."><img src="../img/slide-lawyer.jpg" srcset="../img/slide-lawyer@2x.jpg 2x" alt="Адвокат с сигарой у двери"></div>
+      <div class="slide" data-slug="Инт. Переговорная. Вечер" data-sub="Весы правосудия чувствительны. Мы знаем, куда положить аргументы."><img src="../img/slide-scales.jpg" srcset="../img/slide-scales@2x.jpg 2x" alt="Весы правосудия с монетами"></div>
+      <div class="slide" data-slug="Нат. Здание суда. Вечер" data-sub="Суд назначен на десять. Мы приедем к девяти."><img src="../img/slide-courthouse.jpg" srcset="../img/slide-courthouse@2x.jpg 2x" alt="Здание суда и чёрный автомобиль"></div>
+
+      <div class="credits" data-credits>
+        <p class="credits__pre">Адвокатская контора представляет</p>
+        <div class="credits__title">
+          <h1>Better Call Rahman</h1>
+          <p class="credits__star">В главной роли Рахман Султанович</p>
+        </div>
+      </div>
+      <div class="controls">
+        <button type="button" data-prev aria-label="Предыдущий кадр"><svg viewBox="0 0 256 256" fill="currentColor"><path d="M164.24,203.76a6,6,0,1,1-8.48,8.48l-80-80a6,6,0,0,1,0-8.48l80-80a6,6,0,0,1,8.48,8.48L88.49,128Z"/></svg></button>
+        <button type="button" data-next aria-label="Следующий кадр"><svg viewBox="0 0 256 256" fill="currentColor"><path d="M180.24,132.24l-80,80a6,6,0,0,1-8.48-8.48L167.51,128,91.76,52.24a6,6,0,0,1,8.48-8.48l80,80A6,6,0,0,1,180.24,132.24Z"/></svg></button>
+      </div>
+    </div>
+    <div class="subtitle"><p data-subtitle></p></div>
+  </section>
+
+  <section class="strip-section">
+    <div class="head">
+      <h2>Кадры<br>из практики</h2>
+      <p>Тридцать два года дел, о которых не снимут фильм. Потому что свидетели передумали.</p>
+    </div>
+    <div class="strip" aria-label="Кадры">
+      <div class="reel">
+        <figure><img src="../img/details/ring.jpg" alt=""><figcaption>Перстень</figcaption></figure>
+        <figure><img src="../img/details/coins.jpg" alt=""><figcaption>Аргументы</figcaption></figure>
+        <figure><img src="../img/details/lamp.jpg" alt=""><figcaption>Кабинет</figcaption></figure>
+        <figure><img src="../img/details/car.jpg" alt=""><figcaption>Выезд в суд</figcaption></figure>
+        <figure><img src="../img/details/cash.jpg" alt=""><figcaption>Гонорар</figcaption></figure>
+        <figure><img src="../img/details/document.jpg" alt=""><figcaption>Решение</figcaption></figure>
+        <figure><img src="../img/details/glass.jpg" alt=""><figcaption>После заседания</figcaption></figure>
+        <figure><img src="../img/details/nib.jpg" alt=""><figcaption>Подпись</figcaption></figure>
+        <figure aria-hidden="true"><img src="../img/details/ring.jpg" alt=""><figcaption>Перстень</figcaption></figure>
+        <figure aria-hidden="true"><img src="../img/details/coins.jpg" alt=""><figcaption>Аргументы</figcaption></figure>
+        <figure aria-hidden="true"><img src="../img/details/lamp.jpg" alt=""><figcaption>Кабинет</figcaption></figure>
+        <figure aria-hidden="true"><img src="../img/details/car.jpg" alt=""><figcaption>Выезд в суд</figcaption></figure>
+        <figure aria-hidden="true"><img src="../img/details/cash.jpg" alt=""><figcaption>Гонорар</figcaption></figure>
+        <figure aria-hidden="true"><img src="../img/details/document.jpg" alt=""><figcaption>Решение</figcaption></figure>
+        <figure aria-hidden="true"><img src="../img/details/glass.jpg" alt=""><figcaption>После заседания</figcaption></figure>
+        <figure aria-hidden="true"><img src="../img/details/nib.jpg" alt=""><figcaption>Подпись</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="cast">
+    <h2>В ролях</h2>
+    <p class="cast__sub">Услуги конторы</p>
+    <ul class="roles" data-roles>
+      <li style="--i:0"><span class="role">Уголовная защита</span><span class="name">Рахман Султанович</span></li>
+      <li style="--i:1"><span class="role">Налоги и финансы</span><span class="name">Рахман Султанович</span></li>
+      <li style="--i:2"><span class="role">Семейный бизнес</span><span class="name">Рахман Султанович</span></li>
+      <li style="--i:3"><span class="role">Деликатные вопросы</span><span class="name">Лучше не спрашивать</span></li>
+      <li style="--i:4"><span class="role">Свидетели</span><span class="name">Передумали</span></li>
+      <li style="--i:5"><span class="role">Прокурор</span><span class="name">В роли проигравшего</span></li>
+    </ul>
+  </section>
+
+  <figure class="scene">
+    <img src="../img/signature.jpg" alt="Рука с перстнем подписывает договор">
+    <figcaption>
+      <blockquote>Мне сделали предложение, от которого прокурор не смог отказаться.</blockquote>
+      <cite>Дон К., клиент с 1998 года</cite>
+    </figcaption>
+  </figure>
+
+  <section class="premiere">
+    <div>
+      <h2>Ваше дело.<br>В главной роли вы</h2>
+    </div>
+    <div class="ticket">
+      <small>Билет на приём · ряд 1, место у окна</small>
+      <p>Регистрация занимает минуту. Обязательства действуют всю жизнь.</p>
+      <a class="btn" href="#">Зарегистрироваться</a>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer__end" aria-hidden="true">Конец</div>
+    <div class="footer__grid">
+      <div><h3>Better Call Rahman</h3><p>Все персонажи вымышлены. Любые совпадения случайны.</p></div>
+      <div><h3>Разделы</h3><ul><li><a href="#">Главная</a></li><li><a href="#">Новости</a></li><li><a href="#">Услуги</a></li><li><a href="#">Контакты</a></li><li><a href="#">Регистрация</a></li></ul></div>
+      <div><h3>Контакты</h3><ul><li>ул. Тихая, 7</li><li>+7 (000) 707-07-07</li><li>Пн-Пт, 10:00-19:00</li></ul></div>
+    </div>
+    <p class="footer__legal">Учебный проект, вариант 7 «Адвокатская контора».</p>
+  </footer>
+</div>
+
+<script>
+(function () {
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var slides = [].slice.call(document.querySelectorAll('.slide'));
+  var slug = document.querySelector('[data-slug]');
+  var sub = document.querySelector('[data-subtitle]');
+  var credits = document.querySelector('[data-credits]');
+  var i = 0, timer;
+  function show(n) {
+    var prev = slides[i];
+    prev.classList.remove('is-active'); prev.classList.add('is-leaving');
+    setTimeout(function () { prev.classList.remove('is-leaving'); }, 1900);
+    i = (n + slides.length) % slides.length;
+    slides[i].classList.add('is-active');
+    slug.textContent = slides[i].dataset.slug;
+    sub.style.opacity = 0;
+    setTimeout(function () { sub.textContent = slides[i].dataset.sub; sub.style.opacity = 1; }, 700);
+    credits.classList.toggle('is-hidden', i !== 0);
+    clearTimeout(timer); if (!reduce) timer = setTimeout(function () { show(i + 1); }, 7000);
+  }
+  document.querySelector('[data-prev]').onclick = function () { show(i - 1); };
+  document.querySelector('[data-next]').onclick = function () { show(i + 1); };
+  if (!reduce) timer = setTimeout(function () { show(1); }, 10000);
+
+  var tc = document.querySelector('[data-timecode]'), frames = 0;
+  function pad(n) { return (n < 10 ? '0' : '') + n; }
+  setInterval(function () {
+    frames += 1;
+    var f = frames % 24, s = Math.floor(frames / 24);
+    tc.textContent = '00:' + pad(Math.floor(s / 60) % 60) + ':' + pad(s % 60) + ':' + pad(f);
+  }, 1000 / 24);
+
+  var roles = document.querySelector('[data-roles]');
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (e) { if (e[0].isIntersecting) { roles.classList.add('is-in'); io.disconnect(); } }, { threshold: .25 });
+    io.observe(roles);
+  } else roles.classList.add('is-in');
+})();
+</script>
+</body>
+</html>

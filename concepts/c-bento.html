@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Люкс-бенто · Better Call Rahman</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&amp;display=swap">
+<style>
+  :root {
+    color-scheme: dark;
+    --bg: #0e0407;
+    --shell: rgba(255, 236, 240, .045);
+    --shell-line: rgba(255, 236, 240, .09);
+    --core: #1a080d;
+    --core-2: #240b12;
+    --wine: #8e1b33;
+    --rose: #f0b4c0;
+    --bone: #f6eeef;
+    --muted: #b9a3a8;
+    --f: "Geist", system-ui, -apple-system, sans-serif;
+    --spring: cubic-bezier(.32, .72, 0, 1);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; padding-block: 20px 48px; background: radial-gradient(90% 60% at 50% 0%, #2a0a13 0%, var(--bg) 60%) fixed, var(--bg); color: var(--bone); font: 400 16px/1.55 var(--f); letter-spacing: -.01em; -webkit-font-smoothing: antialiased; }
+  img { display: block; max-width: 100%; }
+  a { color: inherit; }
+  h1, h2, h3, p, figure, blockquote { margin: 0; }
+  :focus-visible { outline: 2px solid var(--rose); outline-offset: 3px; }
+
+  .page { width: 1000px; margin: 0 auto; display: grid; gap: 12px; }
+
+  /* плавающая стеклянная навигация */
+  .nav-wrap { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 12px); z-index: 20; display: flex; justify-content: center; }
+  .nav-pill { display: flex; align-items: center; gap: 22px; padding: 6px 6px 6px 20px; border-radius: 999px; background: rgba(26, 8, 13, .7); -webkit-backdrop-filter: blur(22px) saturate(160%); backdrop-filter: blur(22px) saturate(160%); box-shadow: inset 0 0 0 1px var(--shell-line), inset 0 1px 0 rgba(255, 255, 255, .08), 0 16px 40px rgba(0, 0, 0, .45); }
+  .brand { font-weight: 600; font-size: 15px; letter-spacing: -.02em; text-decoration: none; white-space: nowrap; }
+  .nav { display: flex; gap: 2px; margin: 0; padding: 0; list-style: none; }
+  .nav a { display: inline-block; padding: 9px 14px; border-radius: 999px; font-size: 14px; color: var(--muted); text-decoration: none; transition: color .6s var(--spring), background-color .6s var(--spring); }
+  .nav a:hover { color: var(--bone); background: rgba(255, 255, 255, .06); }
+  .nav a[aria-current="page"] { color: var(--bone); background: rgba(255, 255, 255, .1); }
+  .nav .cta { color: var(--bg); background: var(--bone); font-weight: 500; }
+  .nav .cta:hover { color: var(--bg); background: #fff; }
+
+  /* двойная рамка: оболочка + ядро */
+  .grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 12px; }
+  .shell { padding: 6px; border-radius: 30px; background: var(--shell); box-shadow: inset 0 0 0 1px var(--shell-line); }
+  .core { position: relative; height: 100%; overflow: hidden; border-radius: 24px; background: var(--core); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .06); }
+  .pad { padding: 26px; }
+
+  .js .shell { opacity: 0; transform: translateY(28px) scale(.98); filter: blur(6px); transition: opacity 1.2s var(--spring), transform 1.2s var(--spring), filter 1.2s var(--spring); transition-delay: var(--d, 0s); }
+  .js .shell.is-in { opacity: 1; transform: none; filter: none; }
+
+  .label { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); }
+  .h-lg { font-size: 40px; font-weight: 600; line-height: 1.04; letter-spacing: -.04em; text-wrap: balance; }
+  .h-md { font-size: 24px; font-weight: 600; line-height: 1.12; letter-spacing: -.03em; }
+
+  /* слайдер */
+  .hero { grid-column: 1 / 9; grid-row: span 2; }
+  .hero .core { min-height: 470px; background: #000; }
+  .slide { position: absolute; inset: 0; opacity: 0; transition: opacity 1.6s var(--spring); }
+  .slide.is-active { opacity: 1; }
+  .slide img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.05); }
+  .slide.is-active img, .slide.is-leaving img { animation: kb 10s linear both; }
+  .hero .core::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(14, 4, 7, .9), rgba(14, 4, 7, 0) 55%); pointer-events: none; }
+  .hero__text { position: absolute; z-index: 2; left: 28px; right: 28px; bottom: 26px; display: flex; align-items: end; justify-content: space-between; gap: 20px; }
+  .hero__text h1 { max-width: 11em; font-size: 46px; font-weight: 600; line-height: 1.02; letter-spacing: -.045em; }
+  .hero__text p { margin-top: 10px; color: rgba(246, 238, 239, .75); }
+  .ctrl { display: flex; align-items: center; gap: 6px; padding: 5px; border-radius: 999px; background: rgba(14, 4, 7, .5); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .12); }
+  .ctrl button { width: 38px; height: 38px; padding: 0; border: 0; border-radius: 50%; display: grid; place-items: center; color: var(--bone); background: rgba(255, 255, 255, .08); cursor: pointer; transition: background-color .5s var(--spring), transform .3s var(--spring); }
+  .ctrl button:hover { background: rgba(255, 255, 255, .2); }
+  .ctrl button:active { transform: scale(.92); }
+  .ctrl svg { width: 16px; height: 16px; }
+  .bars { display: flex; gap: 5px; padding: 0 6px; }
+  .bars i { position: relative; width: 22px; height: 3px; border-radius: 3px; background: rgba(255, 255, 255, .25); overflow: hidden; }
+  .bars i b { position: absolute; inset: 0; background: var(--bone); transform: scaleX(0); transform-origin: left; }
+
+  /* статус */
+  .status { grid-column: 9 / 13; }
+  .status .core { display: grid; align-content: space-between; gap: 18px; min-height: 180px; background: radial-gradient(120% 100% at 100% 0%, rgba(142, 27, 51, .55), transparent 60%), var(--core); }
+  .live::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #5fd18b; box-shadow: 0 0 0 0 rgba(95, 209, 139, .6); animation: pulse 2.4s ease-in-out infinite; }
+  .status__rot { display: grid; }
+  .status__rot p { grid-area: 1 / 1; font-size: 23px; font-weight: 600; line-height: 1.15; letter-spacing: -.03em; opacity: 0; transform: translateY(10px); transition: opacity .9s var(--spring), transform .9s var(--spring); }
+  .status__rot p.is-on { opacity: 1; transform: none; }
+
+  /* телефон */
+  .phone { grid-column: 9 / 13; }
+  .phone .core { display: grid; gap: 16px; background: var(--core-2); }
+  .phone__num { font-size: 28px; font-weight: 600; letter-spacing: -.03em; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .btn { justify-self: start; display: inline-flex; align-items: center; gap: 12px; padding: 6px 6px 6px 20px; border-radius: 999px; background: var(--bone); color: var(--bg); font-weight: 500; text-decoration: none; transition: transform .4s var(--spring); }
+  .btn i { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: rgba(14, 4, 7, .08); transition: transform .6s var(--spring); }
+  .btn svg { width: 16px; height: 16px; }
+  .btn:hover i { transform: translate(2px, -2px) scale(1.06); }
+  .btn:active { transform: scale(.97); }
+
+  /* о конторе */
+  .intro { grid-column: 1 / 7; }
+  .intro .core { display: grid; gap: 18px; }
+  .intro p { color: var(--muted); }
+  .person { display: flex; align-items: center; gap: 12px; margin-top: 6px; }
+  .person img { width: 46px; height: 46px; border-radius: 14px; object-fit: cover; object-position: 50% 20%; }
+  .person b { display: block; font-weight: 600; }
+  .person span { font-size: 14px; color: var(--muted); }
+
+  .ring { grid-column: 7 / 10; }
+  .ring .core img, .pic img { width: 100%; height: 100%; object-fit: cover; transition: transform 2.2s var(--spring); }
+  .ring:hover img, .pic:hover img { transform: scale(1.06); }
+
+  .stats { grid-column: 10 / 13; }
+  .stats .core { display: grid; align-content: space-between; gap: 20px; background: var(--core-2); }
+  .big { font-size: 64px; font-weight: 600; line-height: .9; letter-spacing: -.06em; font-variant-numeric: tabular-nums; }
+  .stats small { font-size: 14px; color: var(--muted); }
+  .stats hr { width: 100%; height: 1px; margin: 0; border: 0; background: var(--shell-line); }
+
+  /* услуги с фото */
+  .svc .core { min-height: 240px; display: grid; align-content: end; background: #000; }
+  .svc .core > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: .75; transition: transform 2.2s var(--spring), opacity 1s var(--spring); }
+  .svc .core::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(14, 4, 7, .95) 5%, rgba(14, 4, 7, 0) 70%); }
+  .svc .txt { position: relative; z-index: 1; padding: 22px; }
+  .svc .txt p { max-height: 0; overflow: hidden; color: rgba(246, 238, 239, .8); font-size: 15px; opacity: 0; transition: max-height 1s var(--spring), opacity 1s var(--spring), margin 1s var(--spring); }
+  .svc:hover .core > img { transform: scale(1.06); opacity: .9; }
+  .svc:hover .txt p, .svc:focus-within .txt p { max-height: 90px; margin-top: 8px; opacity: 1; }
+  .s1 { grid-column: 1 / 6; grid-row: span 2; }
+  .s1 .core { min-height: 492px; }
+  .s2 { grid-column: 6 / 9; }
+  .s3 { grid-column: 9 / 13; }
+  .s4 { grid-column: 6 / 13; }
+
+  /* бегущие отзывы */
+  .quotes { grid-column: 1 / -1; }
+  .quotes .core { padding: 30px 0; background: var(--core-2); }
+  .quotes .label { padding: 0 28px 18px; }
+  .track { display: flex; gap: 48px; width: max-content; animation: marquee 60s linear infinite; }
+  .quotes:hover .track { animation-play-state: paused; }
+  .track blockquote { max-width: 30ch; font-size: 22px; font-weight: 500; line-height: 1.25; letter-spacing: -.02em; }
+  .track cite { display: block; margin-top: 10px; font-size: 13px; font-style: normal; color: var(--muted); }
+
+  /* правила и регистрация */
+  .rules { grid-column: 1 / 8; }
+  .rules ol { display: grid; gap: 4px; margin: 20px 0 0; padding: 0; list-style: none; }
+  .rules li { display: grid; grid-template-columns: 38px 1fr; gap: 14px; align-items: baseline; padding: 14px 0; border-top: 1px solid var(--shell-line); }
+  .rules li span { font-size: 14px; color: var(--rose); font-variant-numeric: tabular-nums; }
+  .rules li b { font-weight: 600; font-size: 18px; letter-spacing: -.02em; }
+  .rules li em { display: block; font-style: normal; color: var(--muted); font-size: 15px; }
+  .join { grid-column: 8 / 13; }
+  .join .core { display: grid; gap: 16px; background: radial-gradient(120% 100% at 0% 0%, rgba(142, 27, 51, .6), transparent 65%), var(--core-2); }
+  .join img { border-radius: 16px; aspect-ratio: 16 / 9; object-fit: cover; }
+  .join p { color: var(--muted); }
+
+  .footer { grid-column: 1 / -1; }
+  .footer .core { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px 32px; font-size: 14px; color: var(--muted); }
+  .footer ul { display: flex; flex-wrap: wrap; gap: 4px 18px; margin: 0; padding: 0; list-style: none; }
+  .footer a { text-decoration: none; }
+  .footer a:hover { color: var(--bone); }
+
+  @keyframes kb { from { transform: scale(1.05); } to { transform: scale(1.13); } }
+  @keyframes marquee { to { transform: translateX(-50%); } }
+  @keyframes pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(95, 209, 139, .55); } 50% { box-shadow: 0 0 0 6px rgba(95, 209, 139, 0); } }
+
+  @media (max-width: 1040px) { body { padding: 12px 12px 36px; } .page { width: auto; } }
+  @media (max-width: 760px) {
+    .nav-wrap { position: static; }
+    .nav-pill { flex-direction: column; gap: 8px; padding: 14px 8px 8px; border-radius: 26px; }
+    .nav { flex-wrap: wrap; justify-content: center; }
+    .grid > * { grid-column: 1 / -1 !important; grid-row: auto !important; }
+    .hero .core { min-height: 460px; }
+    .hero__text { flex-direction: column; align-items: start; }
+    .hero__text h1 { font-size: 34px; }
+    .s1 .core { min-height: 300px; }
+    .svc .txt p { max-height: 90px; margin-top: 8px; opacity: 1; }
+    .h-lg { font-size: 32px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+    .js .shell { opacity: 1; transform: none; filter: none; }
+  }
+</style>
+<script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+<div class="page">
+
+  <div class="nav-wrap">
+    <header class="nav-pill">
+      <a class="brand" href="#">Better Call Rahman</a>
+      <nav aria-label="Главное меню">
+        <ul class="nav">
+          <li><a href="#" aria-current="page">Главная</a></li>
+          <li><a href="#">Новости</a></li>
+          <li><a href="#">Услуги</a></li>
+          <li><a href="#">Контакты</a></li>
+          <li><a class="cta" href="#">Регистрация</a></li>
+        </ul>
+      </nav>
+    </header>
+  </div>
+
+  <div class="grid">
+    <section class="shell hero" style="--d:.05s" aria-label="Слайдер">
+      <div class="core">
+        <div class="slide is-active"><img src="../img/slide-office@2x.jpg" alt="Кабинет адвоката"></div>
+        <div class="slide"><img src="../img/slide-lawyer@2x.jpg" alt="Адвокат с сигарой"></div>
+        <div class="slide"><img src="../img/slide-scales@2x.jpg" alt="Весы правосудия"></div>
+        <div class="slide"><img src="../img/slide-courthouse@2x.jpg" alt="Здание суда"></div>
+        <div class="hero__text">
+          <div>
+            <h1>Better Call Rahman</h1>
+            <p>Адвокат для людей, которым есть что терять.</p>
+          </div>
+          <div class="ctrl">
+            <button type="button" data-prev aria-label="Назад"><svg viewBox="0 0 256 256" fill="currentColor"><path d="M164.24,203.76a6,6,0,1,1-8.48,8.48l-80-80a6,6,0,0,1,0-8.48l80-80a6,6,0,0,1,8.48,8.48L88.49,128Z"/></svg></button>
+            <div class="bars"><i><b></b></i><i><b></b></i><i><b></b></i><i><b></b></i></div>
+            <button type="button" data-next aria-label="Вперёд"><svg viewBox="0 0 256 256" fill="currentColor"><path d="M180.24,132.24l-80,80a6,6,0,0,1-8.48-8.48L167.51,128,91.76,52.24a6,6,0,0,1,8.48-8.48l80,80A6,6,0,0,1,180.24,132.24Z"/></svg></button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="shell status" style="--d:.15s">
+      <div class="core pad">
+        <span class="label live">Где сейчас Рахман Султанович</span>
+        <div class="status__rot" data-rot>
+          <p class="is-on">В суде. Выигрывает.</p>
+          <p>Пьёт эспрессо с прокурором.</p>
+          <p>На встрече с семьёй.</p>
+          <p>Не берёт трубку. Шутка, берёт.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="shell phone" style="--d:.25s">
+      <div class="core pad">
+        <span class="label">Экстренная линия, круглосуточно</span>
+        <span class="phone__num">+7 (000) 707-07-07</span>
+        <a class="btn" href="tel:+70007070707">Позвонить <i><svg viewBox="0 0 256 256" fill="currentColor"><path d="M221.59,160.3l-47.24-21.17a14,14,0,0,0-13.28,1.22,4.81,4.81,0,0,0-.56.42l-24.69,21a1.88,1.88,0,0,1-1.68.06c-15.87-7.66-32.31-24-40-39.65a1.910,1.910,0,0,1,0-1.68l21.070-25a6.13,6.13,0,0,0,.42-.58,14,14,0,0,0,1.12-13.27L95.73,34.49a14,14,0,0,0-14.56-8.38A54.24,54.24,0,0,0,34,80c0,78.3,63.7,142,142,142a54.25,54.25,0,0,0,53.89-47.17A14,14,0,0,0,221.59,160.3ZM176,210C104.32,210,46,151.68,46,80A42.23,42.23,0,0,1,82.67,38h.23a2,2,0,0,1,1.84,1.31l21.1,47.11a2,2,0,0,1,0,1.67L84.73,113.15a4.73,4.73,0,0,0-.43.57,14,14,0,0,0-.91,13.73c8.87,18.16,27.17,36.32,45.53,45.19a14,14,0,0,0,13.77-1c.19-.13.38-.27.56-.42l24.68-21a1.92,1.92,0,0,1,1.6-.1l47.25,21.17a2,2,0,0,1,1.21,2A42.24,42.24,0,0,1,176,210Z"/></svg></i></a>
+      </div>
+    </section>
+
+    <section class="shell intro">
+      <div class="core pad">
+        <span class="label">О конторе</span>
+        <h2 class="h-lg">Решаем вопросы, о которых не пишут в газетах</h2>
+        <p>Уголовные дела, налоги, семейный бизнес. С 1994 года. Всё сказанное остаётся между вами, Рахманом Султановичем и адвокатской тайной.</p>
+        <div class="person">
+          <img src="../img/details/lawyer.jpg" alt="">
+          <div><b>Рахман Султанович</b><span>Адвокат, 32 года практики</span></div>
+        </div>
+      </div>
+    </section>
+
+    <figure class="shell ring" style="--d:.1s">
+      <div class="core"><img src="../img/details/ring.jpg" alt="Золотой перстень на руке"></div>
+    </figure>
+
+    <section class="shell stats" style="--d:.2s">
+      <div class="core pad">
+        <span class="label">Выигранных дел</span>
+        <span class="big" data-count="1214">1 214</span>
+        <hr>
+        <small><b style="color:var(--bone)">0</b> клиентов дали показания</small>
+      </div>
+    </section>
+
+    <article class="shell svc s1">
+      <div class="core" tabindex="0"><img src="../img/briefcase.jpg" alt="">
+        <div class="txt"><span class="label">Практика</span><h3 class="h-md">Уголовная защита</h3><p>От первого допроса до оправдательного приговора. Вы молчите, мы говорим.</p></div>
+      </div>
+    </article>
+    <article class="shell svc s2" style="--d:.1s">
+      <div class="core" tabindex="0"><img src="../img/details/document.jpg" alt="">
+        <div class="txt"><h3 class="h-md">Налоги и финансы</h3><p>Объясним налоговой, откуда деньги. Спокойно и с документами.</p></div>
+      </div>
+    </article>
+    <article class="shell svc s3" style="--d:.2s">
+      <div class="core" tabindex="0"><img src="../img/details/glass.jpg" alt="">
+        <div class="txt"><h3 class="h-md">Семейный бизнес</h3><p>Для предприятий, где партнёры приходятся друг другу родственниками.</p></div>
+      </div>
+    </article>
+    <article class="shell svc s4" style="--d:.15s">
+      <div class="core" tabindex="0"><img src="../img/details/cash.jpg" alt="">
+        <div class="txt"><h3 class="h-md">Деликатные вопросы</h3><p>Свидетели, которые передумали. Долги, которые забылись. Подробности при встрече.</p></div>
+      </div>
+    </article>
+
+    <section class="shell quotes" aria-label="Отзывы">
+      <div class="core">
+        <span class="label">Отзывы клиентов</span>
+        <div class="track">
+          <blockquote>«Мне сделали предложение, от которого прокурор не смог отказаться»<cite>Дон К., клиент с 1998 года</cite></blockquote>
+          <blockquote>«Меня не было на месте преступления. Рахман Султанович это доказал»<cite>Имя изменено</cite></blockquote>
+          <blockquote>«Когда судья спросил, кто мой адвокат, в зале стало тихо»<cite>Т. Б., предприниматель</cite></blockquote>
+          <blockquote>«Налоговая извинилась. Дважды»<cite>Семья Г.</cite></blockquote>
+          <blockquote aria-hidden="true">«Мне сделали предложение, от которого прокурор не смог отказаться»<cite>Дон К., клиент с 1998 года</cite></blockquote>
+          <blockquote aria-hidden="true">«Меня не было на месте преступления. Рахман Султанович это доказал»<cite>Имя изменено</cite></blockquote>
+          <blockquote aria-hidden="true">«Когда судья спросил, кто мой адвокат, в зале стало тихо»<cite>Т. Б., предприниматель</cite></blockquote>
+          <blockquote aria-hidden="true">«Налоговая извинилась. Дважды»<cite>Семья Г.</cite></blockquote>
+        </div>
+      </div>
+    </section>
+
+    <section class="shell rules">
+      <div class="core pad">
+        <span class="label">Правила дома</span>
+        <ol>
+          <li><span>I</span><div><b>Молчание золото</b><em>Оплачивается по курсу золота.</em></div></li>
+          <li><span>II</span><div><b>Семья прежде всего</b><em>Ваша или наша, иногда это одна семья.</em></div></li>
+          <li><span>III</span><div><b>Всё в рамках закона</b><em>Рамки мы изучили очень внимательно.</em></div></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="shell join" style="--d:.1s">
+      <div class="core pad">
+        <img src="../img/signature.jpg" alt="Подпись договора">
+        <h2 class="h-md">Станьте клиентом</h2>
+        <p>Регистрация занимает минуту. Обязательства действуют всю жизнь.</p>
+        <a class="btn" href="#">Зарегистрироваться <i><svg viewBox="0 0 256 256" fill="currentColor"><path d="M198,64V168a6,6,0,0,1-12,0V78.48L68.24,196.24a6,6,0,0,1-8.48-8.48L177.52,70H88a6,6,0,0,1,0-12H192A6,6,0,0,1,198,64Z"/></svg></i></a>
+      </div>
+    </section>
+
+    <footer class="shell footer">
+      <div class="core pad">
+        <span>© 1994-2026 Better Call Rahman. Учебный проект, вариант 7.</span>
+        <ul><li><a href="#">Главная</a></li><li><a href="#">Новости</a></li><li><a href="#">Услуги</a></li><li><a href="#">Контакты</a></li><li><a href="#">Регистрация</a></li></ul>
+      </div>
+    </footer>
+  </div>
+</div>
+
+<script>
+(function () {
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var slides = [].slice.call(document.querySelectorAll('.hero .slide'));
+  var bars = [].slice.call(document.querySelectorAll('.bars b'));
+  var i = 0, timer, dur = 6500;
+  function fill() {
+    bars.forEach(function (b, k) { b.style.transition = 'none'; b.style.transform = k < i ? 'scaleX(1)' : 'scaleX(0)'; });
+    void bars[i].offsetWidth;
+    if (!reduce) { bars[i].style.transition = 'transform ' + dur + 'ms linear'; bars[i].style.transform = 'scaleX(1)'; }
+  }
+  function show(n) {
+    var prev = slides[i];
+    prev.classList.remove('is-active'); prev.classList.add('is-leaving');
+    setTimeout(function () { prev.classList.remove('is-leaving'); }, 1700);
+    i = (n + slides.length) % slides.length;
+    slides[i].classList.add('is-active');
+    fill();
+    clearTimeout(timer); if (!reduce) timer = setTimeout(function () { show(i + 1); }, dur);
+  }
+  document.querySelector('[data-prev]').onclick = function () { show(i - 1); };
+  document.querySelector('[data-next]').onclick = function () { show(i + 1); };
+  fill(); if (!reduce) timer = setTimeout(function () { show(1); }, dur);
+
+  var rot = [].slice.call(document.querySelectorAll('[data-rot] p')), r = 0;
+  if (!reduce) setInterval(function () { rot[r].classList.remove('is-on'); r = (r + 1) % rot.length; rot[r].classList.add('is-on'); }, 3800);
+
+  function countUp(el) {
+    var t = +el.dataset.count, s = null;
+    function step(ts) { if (s === null) s = ts; var p = Math.min(1, (ts - s) / 2400), e = 1 - Math.pow(1 - p, 3);
+      el.textContent = String(Math.round(t * e)).replace(/\B(?=(\d{3})+(?!\d))/g, ' '); if (p < 1) requestAnimationFrame(step); }
+    requestAnimationFrame(step);
+  }
+  var shells = [].slice.call(document.querySelectorAll('.shell'));
+  if ('IntersectionObserver' in window && !reduce) {
+    var io = new IntersectionObserver(function (es) { es.forEach(function (e) {
+      if (!e.isIntersecting) return; e.target.classList.add('is-in');
+      var c = e.target.querySelector('[data-count]'); if (c) countUp(c);
+      io.unobserve(e.target); }); }, { threshold: .15 });
+    shells.forEach(function (s) { io.observe(s); });
+  } else shells.forEach(function (s) { s.classList.add('is-in'); });
+})();
+</script>
+</body>
+</html>
