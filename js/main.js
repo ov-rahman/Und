@@ -1,8 +1,22 @@
-/* Better Call Rahman. Сценарии страницы: слайдер, раскрытие фото при прокрутке, проявление фразы по словам. */
+/* Better Call Rahman. Сценарии главной: слайдер, счётчики, появление услуг, отзывы, визитка. */
 (function () {
   'use strict';
 
   var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function onVisible(el, callback, threshold) {
+    if (!el) return;
+    if (!('IntersectionObserver' in window) || reduceMotion) {
+      callback(el);
+      return;
+    }
+    var io = new IntersectionObserver(function (entries) {
+      if (!entries[0].isIntersecting) return;
+      callback(el);
+      io.disconnect();
+    }, { threshold: threshold || 0.2 });
+    io.observe(el);
+  }
 
   /* ---------- Слайдер ---------- */
 
@@ -12,15 +26,18 @@
 
     var dots = [].slice.call(root.querySelectorAll('.hero__dot'));
     var bars = dots.map(function (dot) { return dot.querySelector('span'); });
-    var interval = 7000;
-    var fade = 1600;
+    var fade = 1800;
     var index = 0;
     var timer = null;
     var paused = false;
-    var remaining = interval;
+    var remaining = 0;
     var startedAt = 0;
 
-    /* пройденные полоски заполнены, будущие пустые */
+    /* первый кадр держим дольше, чтобы заставка успела проиграться */
+    function durationOf(i) {
+      return i === 0 ? 9000 : 7000;
+    }
+
     function resetBars() {
       bars.forEach(function (bar, k) {
         bar.style.transition = 'none';
@@ -36,9 +53,7 @@
       remaining = ms;
       bars[index].style.transition = 'transform ' + ms + 'ms linear';
       bars[index].style.transform = 'scaleX(1)';
-      timer = setTimeout(function () {
-        show(index + 1);
-      }, ms);
+      timer = setTimeout(function () { show(index + 1); }, ms);
     }
 
     function show(i) {
@@ -49,9 +64,7 @@
       prev.classList.remove('is-active');
       prev.classList.add('is-leaving');
       prev.setAttribute('aria-hidden', 'true');
-      setTimeout(function () {
-        prev.classList.remove('is-leaving');
-      }, fade + 100);
+      setTimeout(function () { prev.classList.remove('is-leaving'); }, fade + 100);
 
       index = next;
       slides[index].classList.add('is-active');
@@ -61,11 +74,8 @@
       });
 
       resetBars();
-      if (paused) {
-        remaining = interval;
-      } else {
-        startTimer(interval);
-      }
+      if (paused) remaining = durationOf(index);
+      else startTimer(durationOf(index));
     }
 
     function pause() {
@@ -123,39 +133,61 @@
     });
 
     resetBars();
-    startTimer(interval);
+    startTimer(durationOf(0));
   }
 
-  /* ---------- Фото раскрываются, когда до них доходит прокрутка ---------- */
+  /* ---------- Счётчики ---------- */
 
-  function initPhotos() {
-    var photos = [].slice.call(document.querySelectorAll('.photo'));
-    if (!('IntersectionObserver' in window) || reduceMotion) {
-      photos.forEach(function (el) { el.classList.add('is-in'); });
-      return;
+  function countUp(el) {
+    var target = parseInt(el.getAttribute('data-count'), 10);
+    if (isNaN(target) || reduceMotion) return;
+    var start = null;
+    function step(ts) {
+      if (start === null) start = ts;
+      var t = Math.min(1, (ts - start) / 2400);
+      var eased = 1 - Math.pow(1 - t, 3);
+      el.textContent = String(Math.round(target * eased)).replace(/\B(?=(\d{3})+(?!\d))/g, '\u00A0');
+      if (t < 1) requestAnimationFrame(step);
     }
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (!entry.isIntersecting) return;
-        entry.target.classList.add('is-in');
-        io.unobserve(entry.target);
-      });
-    }, { rootMargin: '0px 0px -10% 0px', threshold: 0.2 });
-    photos.forEach(function (el) { io.observe(el); });
+    el.textContent = '0';
+    requestAnimationFrame(step);
   }
 
-  /* ---------- Фраза с цифрами: делим на слова для проявления при чтении ---------- */
+  /* ---------- Отзывы сменяют друг друга ---------- */
 
-  function splitWords(el) {
-    var words = el.textContent.trim().split(/ +/);
-    el.textContent = '';
-    words.forEach(function (word, i) {
-      var span = document.createElement('span');
-      span.className = 'w';
-      span.style.setProperty('--i', i);
-      span.textContent = word;
-      el.appendChild(span);
-      if (i < words.length - 1) el.appendChild(document.createTextNode(' '));
+  function initQuotes(root) {
+    var quotes = [].slice.call(root.querySelectorAll('.quote'));
+    if (quotes.length < 2 || reduceMotion) return;
+    var i = 0;
+    var hovered = false;
+    root.addEventListener('mouseenter', function () { hovered = true; });
+    root.addEventListener('mouseleave', function () { hovered = false; });
+    setInterval(function () {
+      if (hovered || document.hidden) return;
+      quotes[i].classList.remove('is-active');
+      i = (i + 1) % quotes.length;
+      quotes[i].classList.add('is-active');
+    }, 7000);
+  }
+
+  /* ---------- Визитка поворачивается за курсором ---------- */
+
+  function initCard(wrap) {
+    var card = wrap.querySelector('.bcard');
+    if (!card || reduceMotion) return;
+    wrap.addEventListener('pointermove', function (e) {
+      if (e.pointerType !== 'mouse') return;
+      var r = card.getBoundingClientRect();
+      var x = (e.clientX - r.left) / r.width;
+      var y = (e.clientY - r.top) / r.height;
+      card.style.setProperty('--ry', ((x - 0.5) * 16).toFixed(2) + 'deg');
+      card.style.setProperty('--rx', ((0.5 - y) * 12).toFixed(2) + 'deg');
+      card.style.setProperty('--gx', (x * 100).toFixed(1) + '%');
+      card.style.setProperty('--gy', (y * 100).toFixed(1) + '%');
+    });
+    wrap.addEventListener('pointerleave', function () {
+      card.style.setProperty('--ry', '0deg');
+      card.style.setProperty('--rx', '0deg');
     });
   }
 
@@ -164,7 +196,16 @@
   var hero = document.querySelector('.hero');
   if (hero) initSlider(hero);
 
-  [].slice.call(document.querySelectorAll('[data-words]')).forEach(splitWords);
+  [].slice.call(document.querySelectorAll('[data-count]')).forEach(function (el) {
+    onVisible(el, countUp, 0.6);
+  });
 
-  initPhotos();
+  onVisible(document.querySelector('[data-services]'), function (el) { el.classList.add('is-in'); }, 0.15);
+  onVisible(document.querySelector('[data-scene]'), function (el) { el.classList.add('is-in'); }, 0.3);
+
+  var quotes = document.querySelector('[data-quotes]');
+  if (quotes) initQuotes(quotes.closest('.scene') || quotes);
+
+  var card = document.querySelector('[data-card]');
+  if (card) initCard(card);
 })();
