@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Четыре стиля Rahman</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap">
+<style>
+  :root { color-scheme: dark; --bg: #10050a; --card: #1b0910; --line: rgba(255, 236, 240, .1); --bone: #f6eeef; --muted: #b9a3a8; --wine: #a8233f; --ease: cubic-bezier(.16, 1, .3, 1); }
+  * { box-sizing: border-box; }
+  body { margin: 0; padding: 40px 16px 56px; background: var(--bg); color: var(--bone); font: 400 16px/1.55 "Manrope", system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  .wrap { max-width: 1000px; margin: 0 auto; }
+  .kicker { font-weight: 600; font-size: 14px; color: var(--muted); }
+  h1 { margin: 10px 0 12px; font-size: 44px; font-weight: 800; line-height: 1.05; letter-spacing: -.035em; text-wrap: balance; }
+  .lead { max-width: 60ch; margin: 0; color: var(--muted); }
+  .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; margin-top: 36px; }
+  .card { display: grid; gap: 14px; padding: 12px 12px 20px; border-radius: 26px; background: var(--card); box-shadow: inset 0 0 0 1px var(--line); text-decoration: none; color: inherit; transition: transform .8s var(--ease), box-shadow .8s var(--ease); }
+  .card:hover { transform: translateY(-4px); box-shadow: inset 0 0 0 1px rgba(255, 236, 240, .22), 0 24px 50px rgba(0, 0, 0, .45); }
+  .card:active { transform: scale(.99); }
+  .thumb { overflow: hidden; border-radius: 18px; aspect-ratio: 1 / 1; }
+  .thumb img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform 1.6s var(--ease); }
+  .card:hover .thumb img { transform: scale(1.04); }
+  .meta { display: grid; gap: 6px; padding: 0 8px; }
+  .name { display: flex; align-items: center; gap: 12px; font-size: 24px; font-weight: 700; letter-spacing: -.025em; }
+  .letter { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 10px; background: var(--wine); font-size: 16px; font-weight: 800; }
+  .meta p { margin: 0; color: var(--muted); font-size: 15px; }
+  .open { justify-self: start; margin: 6px 8px 0; padding: 11px 18px; border-radius: 999px; background: var(--bone); color: var(--bg); font-weight: 600; font-size: 14px; }
+  .note { margin: 28px 0 0; padding: 18px 20px; border-radius: 18px; background: var(--card); box-shadow: inset 0 0 0 1px var(--line); color: var(--muted); }
+  .note b { color: var(--bone); }
+  @media (max-width: 720px) { h1 { font-size: 34px; } .grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="kicker">Better Call Rahman, главная страница</p>
+  <h1>Выбери стиль, который нравится</h1>
+  <p class="lead">Четыре совсем разных направления, все в тёмном бордо. Открой каждое: там работают слайдер и анимации. Потом напиши букву, и я доделаю весь сайт в этом стиле.</p>
+
+  <div class="grid">
+    <a class="card" href="a-kino.html">
+      <div class="thumb"><img src="thumbs/a-kino.jpg" alt="Превью стиля Кино"></div>
+      <div class="meta">
+        <span class="name"><span class="letter">A</span>Кино</span>
+        <p>Главная как начало фильма про мафию: титры «В главной роли Рахман Султанович», кадры на киноплёнке, услуги списком актёров, отзыв субтитрами.</p>
+      </div>
+      <span class="open">Открыть «Кино»</span>
+    </a>
+    <a class="card" href="b-zhurnal.html">
+      <div class="thumb"><img src="thumbs/b-zhurnal.jpg" alt="Превью стиля Журнал"></div>
+      <div class="meta">
+        <span class="name"><span class="letter">B</span>Журнал</span>
+        <p>Обложка дорогого глянца: огромное RAHMAN, заголовки поверх фото, штрихкод и наклейка. Внутри содержание номера и интервью с адвокатом.</p>
+      </div>
+      <span class="open">Открыть «Журнал»</span>
+    </a>
+    <a class="card" href="c-bento.html">
+      <div class="thumb"><img src="thumbs/c-bento.jpg" alt="Превью стиля Люкс-бенто"></div>
+      <div class="meta">
+        <span class="name"><span class="letter">C</span>Люкс-бенто</span>
+        <p>Стиль Apple и Midjourney: плитки разных размеров с фото, стеклянное меню, живая плитка «Где сейчас Рахман Султанович», счётчик дел, бегущие отзывы.</p>
+      </div>
+      <span class="open">Открыть «Люкс-бенто»</span>
+    </a>
+    <a class="card" href="d-dosye.html">
+      <div class="thumb"><img src="thumbs/d-dosye.jpg" alt="Превью стиля Досье"></div>
+      <div class="meta">
+        <span class="name"><span class="letter">D</span>Досье</span>
+        <p>Папка уголовного дела: меню-закладки, штампы «Хранить вечно» и «Оправдан», текст под чёрными полосами открывается нажатием, вещдоки на фото.</p>
+      </div>
+      <span class="open">Открыть «Досье»</span>
+    </a>
+  </div>
+
+  <p class="note"><b>Можно смешивать.</b> Например, заставку из «Кино» и плитки из «Люкс-бенто». Просто напиши, что откуда взять.</p>
+</div>
+</body>
+</html>
