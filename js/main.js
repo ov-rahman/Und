@@ -1,19 +1,19 @@
-/* Better Call Rahman — сценарии страницы: слайдер, появление блоков, счётчики, отзывы, подсветка карточек */
+/* Better Call Rahman. Сценарии страницы: слайдер, раскрытие фото при прокрутке, проявление фразы по словам. */
 (function () {
   'use strict';
 
   var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  /* ---------- Слайдер с полосками-индикаторами ---------- */
+  /* ---------- Слайдер ---------- */
 
   function initSlider(root) {
     var slides = [].slice.call(root.querySelectorAll('.slide'));
     if (slides.length < 2) return;
 
-    var dots = [].slice.call(root.querySelectorAll('.slider__dot'));
+    var dots = [].slice.call(root.querySelectorAll('.hero__dot'));
     var bars = dots.map(function (dot) { return dot.querySelector('span'); });
     var interval = 7000;
-    var fade = 1800;
+    var fade = 1600;
     var index = 0;
     var timer = null;
     var paused = false;
@@ -23,11 +23,10 @@
     /* пройденные полоски заполнены, будущие пустые */
     function resetBars() {
       bars.forEach(function (bar, k) {
-        if (!bar) return;
         bar.style.transition = 'none';
         bar.style.transform = k < index || (reduceMotion && k === index) ? 'scaleX(1)' : 'scaleX(0)';
       });
-      if (bars[index]) void bars[index].offsetWidth;
+      void bars[index].offsetWidth;
     }
 
     function startTimer(ms) {
@@ -35,11 +34,8 @@
       if (reduceMotion) return;
       startedAt = Date.now();
       remaining = ms;
-      var bar = bars[index];
-      if (bar) {
-        bar.style.transition = 'transform ' + ms + 'ms linear';
-        bar.style.transform = 'scaleX(1)';
-      }
+      bars[index].style.transition = 'transform ' + ms + 'ms linear';
+      bars[index].style.transform = 'scaleX(1)';
       timer = setTimeout(function () {
         show(index + 1);
       }, ms);
@@ -60,7 +56,6 @@
       index = next;
       slides[index].classList.add('is-active');
       slides[index].setAttribute('aria-hidden', 'false');
-
       dots.forEach(function (dot, k) {
         dot.setAttribute('aria-current', k === index ? 'true' : 'false');
       });
@@ -78,12 +73,9 @@
       paused = true;
       clearTimeout(timer);
       remaining = Math.max(0, remaining - (Date.now() - startedAt));
-      var bar = bars[index];
-      if (bar) {
-        var matrix = getComputedStyle(bar).transform;
-        bar.style.transition = 'none';
-        bar.style.transform = matrix === 'none' ? 'scaleX(0)' : matrix;
-      }
+      var matrix = getComputedStyle(bars[index]).transform;
+      bars[index].style.transition = 'none';
+      bars[index].style.transform = matrix === 'none' ? 'scaleX(0)' : matrix;
     }
 
     function resume() {
@@ -93,9 +85,7 @@
     }
 
     dots.forEach(function (dot, k) {
-      dot.addEventListener('click', function () {
-        show(k);
-      });
+      dot.addEventListener('click', function () { show(k); });
     });
 
     var prevBtn = root.querySelector('[data-slider-prev]');
@@ -136,95 +126,45 @@
     startTimer(interval);
   }
 
-  /* ---------- Счётчики ---------- */
+  /* ---------- Фото раскрываются, когда до них доходит прокрутка ---------- */
 
-  function formatNumber(n) {
-    return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
-  }
-
-  function countUp(el) {
-    var target = parseInt(el.getAttribute('data-count'), 10);
-    if (isNaN(target) || reduceMotion) return;
-    var duration = 2600;
-    var start = null;
-    function step(ts) {
-      if (start === null) start = ts;
-      var t = Math.min(1, (ts - start) / duration);
-      var eased = 1 - Math.pow(1 - t, 3);
-      el.textContent = formatNumber(Math.round(target * eased));
-      if (t < 1) requestAnimationFrame(step);
-    }
-    el.textContent = '0';
-    requestAnimationFrame(step);
-  }
-
-  /* ---------- Плавное появление блоков ---------- */
-
-  function initReveal() {
-    var items = [].slice.call(document.querySelectorAll('[data-reveal]'));
-    var counters = [].slice.call(document.querySelectorAll('[data-count]'));
-
+  function initPhotos() {
+    var photos = [].slice.call(document.querySelectorAll('.photo'));
     if (!('IntersectionObserver' in window) || reduceMotion) {
-      items.forEach(function (el) { el.classList.add('is-visible'); });
+      photos.forEach(function (el) { el.classList.add('is-in'); });
       return;
     }
-
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
         if (!entry.isIntersecting) return;
-        entry.target.classList.add('is-visible');
+        entry.target.classList.add('is-in');
         io.unobserve(entry.target);
       });
-    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.12 });
-    items.forEach(function (el) { io.observe(el); });
-
-    var countIo = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (!entry.isIntersecting) return;
-        countUp(entry.target);
-        countIo.unobserve(entry.target);
-      });
-    }, { threshold: 0.6 });
-    counters.forEach(function (el) { countIo.observe(el); });
+    }, { rootMargin: '0px 0px -10% 0px', threshold: 0.2 });
+    photos.forEach(function (el) { io.observe(el); });
   }
 
-  /* ---------- Отзывы сменяют друг друга ---------- */
+  /* ---------- Фраза с цифрами: делим на слова для проявления при чтении ---------- */
 
-  function initQuotes(root) {
-    var quotes = [].slice.call(root.querySelectorAll('.quote'));
-    if (quotes.length < 2 || reduceMotion) return;
-    var i = 0;
-    var hovered = false;
-    root.addEventListener('mouseenter', function () { hovered = true; });
-    root.addEventListener('mouseleave', function () { hovered = false; });
-    setInterval(function () {
-      if (hovered || document.hidden) return;
-      quotes[i].classList.remove('is-active');
-      i = (i + 1) % quotes.length;
-      quotes[i].classList.add('is-active');
-    }, 8000);
-  }
-
-  /* ---------- Мягкая подсветка карточек за курсором ---------- */
-
-  function initSpotlight() {
-    [].slice.call(document.querySelectorAll('.spot')).forEach(function (el) {
-      el.addEventListener('pointermove', function (e) {
-        var r = el.getBoundingClientRect();
-        el.style.setProperty('--mx', (e.clientX - r.left) + 'px');
-        el.style.setProperty('--my', (e.clientY - r.top) + 'px');
-      });
+  function splitWords(el) {
+    var words = el.textContent.trim().split(/ +/);
+    el.textContent = '';
+    words.forEach(function (word, i) {
+      var span = document.createElement('span');
+      span.className = 'w';
+      span.style.setProperty('--i', i);
+      span.textContent = word;
+      el.appendChild(span);
+      if (i < words.length - 1) el.appendChild(document.createTextNode(' '));
     });
   }
 
   /* ---------- Запуск ---------- */
 
-  var slider = document.querySelector('.slider');
-  if (slider) initSlider(slider);
+  var hero = document.querySelector('.hero');
+  if (hero) initSlider(hero);
 
-  var testimonials = document.querySelector('.testimonials');
-  if (testimonials) initQuotes(testimonials);
+  [].slice.call(document.querySelectorAll('[data-words]')).forEach(splitWords);
 
-  initSpotlight();
-  initReveal();
+  initPhotos();
 })();

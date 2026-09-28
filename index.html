@@ -4,277 +4,184 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Better Call Rahman</title>
-  <meta name="description" content="Адвокатская контора Рахмана Султановича. Решаем вопросы с 1994 года.">
+  <meta name="description" content="Адвокатская контора Рахмана Султановича. Уголовная защита, налоги, семейный бизнес и деликатные вопросы с 1994 года.">
+  <meta name="theme-color" content="#2a0812">
   <script>document.documentElement.classList.add('js');</script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&amp;display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Wix+Madefor+Display:wght@400;600&amp;family=Wix+Madefor+Text:wght@400;600&amp;display=swap">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-<div class="ambient" aria-hidden="true"><span></span><span></span><span></span></div>
+<a class="skip-link" href="#main">Перейти к содержанию</a>
 
 <div class="page">
 
   <!-- ===== Шапка и меню ===== -->
   <header class="header">
-    <a class="logo" href="index.html">
-      <span class="logo__mark" aria-hidden="true">R</span>
-      <span class="logo__name">Better Call Rahman</span>
-    </a>
-    <nav class="menu" aria-label="Главное меню">
-      <ul class="menu__list">
-        <li><a class="menu__link" href="index.html" aria-current="page">Главная</a></li>
-        <li><a class="menu__link" href="news.html">Новости</a></li>
-        <li><a class="menu__link" href="services.html">Услуги</a></li>
-        <li><a class="menu__link" href="contacts.html">Контакты</a></li>
-        <li><a class="menu__link menu__link--cta" href="register.html">Регистрация</a></li>
+    <a class="wordmark" href="index.html">Better Call Rahman</a>
+    <nav aria-label="Главное меню">
+      <ul class="nav">
+        <li><a href="index.html" aria-current="page">Главная</a></li>
+        <li><a href="news.html">Новости</a></li>
+        <li><a href="services.html">Услуги</a></li>
+        <li><a href="contacts.html">Контакты</a></li>
+        <li><a class="nav__cta" href="register.html">Регистрация</a></li>
       </ul>
     </nav>
   </header>
 
   <!-- ===== Слайдер ===== -->
-  <section class="slider" aria-roledescription="карусель" aria-label="Кабинет Рахмана Султановича" tabindex="0">
-    <ul class="slider__track">
-      <li class="slide is-active" style="--origin:50% 55%" aria-roledescription="слайд" aria-label="1 из 4">
+  <section class="hero" aria-roledescription="карусель" aria-label="Контора Рахмана Султановича" tabindex="0">
+    <ul class="slides">
+      <li class="slide is-active" style="--origin:55% 50%" aria-roledescription="слайд" aria-label="1 из 4">
         <div class="slide__media">
           <img class="slide__img" src="img/slide-office.jpg" srcset="img/slide-office@2x.jpg 2x" width="1000" height="430" alt="Кабинет адвоката ночью: книжные шкафы, кожаное кресло, лампа и виски на столе">
         </div>
         <div class="slide__caption">
-          <span class="chip">Кабинет на Тихой, 7</span>
-          <h2 class="slide__title">Вопросы, которые не обсуждают по телефону</h2>
-          <p class="slide__text">Их обсуждают здесь, за закрытой дверью.</p>
+          <h2 class="slide__title slide__title--brand mask"><span>Better Call Rahman</span></h2>
+          <p class="slide__text mask"><span>Адвокат Рахман Султанович. Решаем вопросы с 1994 года.</span></p>
         </div>
       </li>
       <li class="slide" style="--origin:72% 40%" aria-roledescription="слайд" aria-label="2 из 4" aria-hidden="true">
         <div class="slide__media">
-          <img class="slide__img" src="img/slide-lawyer.jpg" srcset="img/slide-lawyer@2x.jpg 2x" width="1000" height="430" alt="Мужчина в тёмном костюме с сигарой стоит спиной в дверном проёме">
+          <img class="slide__img" src="img/slide-lawyer.jpg" srcset="img/slide-lawyer@2x.jpg 2x" width="1000" height="430" alt="Мужчина в тёмном костюме с сигарой стоит спиной в дверном проёме" loading="lazy">
         </div>
         <div class="slide__caption">
-          <span class="chip">Рахман Султанович</span>
-          <h2 class="slide__title">Он не спрашивает, как это случилось</h2>
-          <p class="slide__text">Он спрашивает, кто ещё об этом знает.</p>
+          <h2 class="slide__title mask"><span>Он не спрашивает, как это случилось</span></h2>
+          <p class="slide__text mask"><span>Он спрашивает, кто ещё об этом знает.</span></p>
         </div>
       </li>
       <li class="slide" style="--origin:70% 50%" aria-roledescription="слайд" aria-label="3 из 4" aria-hidden="true">
         <div class="slide__media">
-          <img class="slide__img" src="img/slide-scales.jpg" srcset="img/slide-scales@2x.jpg 2x" width="1000" height="430" alt="Весы правосудия: на одной чаше монеты, на другой документ с сургучной печатью">
+          <img class="slide__img" src="img/slide-scales.jpg" srcset="img/slide-scales@2x.jpg 2x" width="1000" height="430" alt="Весы правосудия: на одной чаше монеты, на другой документ с сургучной печатью" loading="lazy">
         </div>
         <div class="slide__caption">
-          <span class="chip">Правосудие</span>
-          <h2 class="slide__title">Весы правосудия очень чувствительны</h2>
-          <p class="slide__text">Мы знаем, на какую чашу положить аргументы.</p>
+          <h2 class="slide__title mask"><span>Весы правосудия очень чувствительны</span></h2>
+          <p class="slide__text mask"><span>Мы знаем, на какую чашу положить аргументы.</span></p>
         </div>
       </li>
       <li class="slide" style="--origin:50% 60%" aria-roledescription="слайд" aria-label="4 из 4" aria-hidden="true">
         <div class="slide__media">
-          <img class="slide__img" src="img/slide-courthouse.jpg" srcset="img/slide-courthouse@2x.jpg 2x" width="1000" height="430" alt="Здание суда с колоннами вечером, у ступеней стоит чёрный автомобиль">
+          <img class="slide__img" src="img/slide-courthouse.jpg" srcset="img/slide-courthouse@2x.jpg 2x" width="1000" height="430" alt="Здание суда с колоннами вечером, у ступеней стоит чёрный автомобиль" loading="lazy">
         </div>
         <div class="slide__caption">
-          <span class="chip">Выездная защита</span>
-          <h2 class="slide__title">Суд назначен на десять</h2>
-          <p class="slide__text">Мы приедем к девяти.</p>
+          <h2 class="slide__title mask"><span>Суд назначен на десять</span></h2>
+          <p class="slide__text mask"><span>Мы приедем к девяти.</span></p>
         </div>
       </li>
     </ul>
 
-    <div class="slider__controls">
-      <button class="slider__arrow" type="button" data-slider-prev aria-label="Предыдущий слайд">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
-      </button>
-      <div class="slider__dots">
-        <button class="slider__dot" type="button" aria-label="Слайд 1" aria-current="true"><span></span></button>
-        <button class="slider__dot" type="button" aria-label="Слайд 2" aria-current="false"><span></span></button>
-        <button class="slider__dot" type="button" aria-label="Слайд 3" aria-current="false"><span></span></button>
-        <button class="slider__dot" type="button" aria-label="Слайд 4" aria-current="false"><span></span></button>
+    <div class="hero__controls">
+      <div class="hero__progress">
+        <button class="hero__dot" type="button" aria-label="Слайд 1" aria-current="true"><span></span></button>
+        <button class="hero__dot" type="button" aria-label="Слайд 2" aria-current="false"><span></span></button>
+        <button class="hero__dot" type="button" aria-label="Слайд 3" aria-current="false"><span></span></button>
+        <button class="hero__dot" type="button" aria-label="Слайд 4" aria-current="false"><span></span></button>
       </div>
-      <button class="slider__arrow" type="button" data-slider-next aria-label="Следующий слайд">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+      <!-- иконки: Phosphor Icons, caret-left / caret-right, начертание Light -->
+      <button class="hero__btn" type="button" data-slider-prev aria-label="Предыдущий слайд">
+        <svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M164.24,203.76a6,6,0,1,1-8.48,8.48l-80-80a6,6,0,0,1,0-8.48l80-80a6,6,0,0,1,8.48,8.48L88.49,128Z"/></svg>
+      </button>
+      <button class="hero__btn" type="button" data-slider-next aria-label="Следующий слайд">
+        <svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M180.24,132.24l-80,80a6,6,0,0,1-8.48-8.48L167.51,128,91.76,52.24a6,6,0,0,1,8.48-8.48l80,80A6,6,0,0,1,180.24,132.24Z"/></svg>
       </button>
     </div>
   </section>
 
-  <div class="layout">
+  <main id="main">
 
-    <!-- ===== Основной контент ===== -->
-    <main class="content">
+    <!-- ===== О конторе ===== -->
+    <section class="tile tile--claret intro">
+      <h1>Адвокат для людей, которым есть что терять</h1>
+      <div class="intro__body">
+        <p class="intro__lead">Контора «Better Call Rahman» ведёт уголовные дела, сопровождает семейный бизнес и решает вопросы, о которых не пишут в газетах. Часто именно потому, что за дело взялись мы.</p>
+        <p class="muted">Рахман Султанович лично выслушает вас. Всё сказанное останется между вами, им и адвокатской тайной.</p>
+        <p class="signature">
+          <strong>Рахман Султанович</strong>
+          <span>адвокат с 1994 года</span>
+        </p>
+      </div>
+    </section>
 
-      <section class="tile welcome" data-reveal>
-        <div class="welcome__text">
-          <div>
-            <p class="eyebrow">О конторе</p>
-            <h1>Добро пожаловать <span class="accent">в семью.</span></h1>
-          </div>
-          <p class="muted">Адвокатская контора «Better Call Rahman» ведёт дела уважаемых людей с 1994 года. Мы защищаем в уголовных процессах, сопровождаем бизнес и решаем деликатные семейные вопросы. О таких вопросах не пишут в газетах. Часто именно потому, что за дело взялись мы.</p>
-          <p class="muted">Рахман Султанович лично выслушает вас за чашкой эспрессо. Всё сказанное останется между вами, им и адвокатской тайной.</p>
-          <div class="person">
-            <span class="person__avatar" aria-hidden="true">РС</span>
-            <span>
-              <span class="person__name">Рахман Султанович</span>
-              <span class="person__role">Адвокат, в профессии с 1994 года</span>
-            </span>
-          </div>
+    <!-- ===== Практика ===== -->
+    <section class="tile tile--claret-2">
+      <div class="practice">
+        <div class="photo">
+          <img src="img/briefcase.jpg" width="760" height="760" alt="Открытый кожаный портфель с пачками денег и папкой дела" loading="lazy">
         </div>
-        <img class="welcome__photo" src="img/briefcase.jpg" width="520" height="520" alt="Открытый кожаный портфель с пачками денег и папкой дела" loading="lazy">
-      </section>
-
-      <section class="tile" data-reveal>
-        <p class="eyebrow">Практика</p>
-        <h2 class="title">Чем мы можем помочь</h2>
-        <ul class="cards">
-          <li class="card spot">
-            <h3 class="card__title">Уголовная защита</h3>
-            <p class="card__text">От первого допроса до оправдательного приговора. Вы молчите, мы говорим.</p>
-            <a class="link" href="services.html">Подробнее <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
-          </li>
-          <li class="card spot">
-            <h3 class="card__title">Налоги и финансы</h3>
-            <p class="card__text">Объясним налоговой, откуда деньги. Спокойно, вежливо и с документами.</p>
-            <a class="link" href="services.html">Подробнее <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
-          </li>
-          <li class="card spot">
-            <h3 class="card__title">Семейный бизнес</h3>
-            <p class="card__text">Сопровождаем предприятия, где партнёры приходятся друг другу родственниками.</p>
-            <a class="link" href="services.html">Подробнее <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
-          </li>
-          <li class="card spot">
-            <h3 class="card__title">Деликатные вопросы</h3>
-            <p class="card__text">Свидетели, которые передумали. Долги, которые забылись. Подробности при личной встрече.</p>
-            <a class="link" href="services.html">Подробнее <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
-          </li>
-        </ul>
-      </section>
-
-      <section class="tile" data-reveal>
-        <p class="eyebrow">В цифрах</p>
-        <h2 class="title">Цифры, которые можно назвать</h2>
-        <dl class="stats">
-          <div class="stat spot"><dt>лет в профессии</dt><dd><span data-count="32">32</span></dd></div>
-          <div class="stat spot"><dt>выигранных дел</dt><dd><span data-count="1214">1&#8239;214</span></dd></div>
-          <div class="stat spot"><dt>клиентов, давших показания</dt><dd class="accent">0</dd></div>
-          <div class="stat spot"><dt>дел закрыто. Некоторые навсегда</dt><dd><span data-count="97">97</span>%</dd></div>
-        </dl>
-        <p class="stats__note">Остальные цифры хранятся в другой книге. Её мы не показываем.</p>
-      </section>
-
-      <section class="tile" data-reveal>
-        <p class="eyebrow">Устав конторы</p>
-        <h2 class="title">Три правила дома</h2>
-        <ol class="rules">
-          <li class="rule">
-            <span class="rule__num">1</span>
-            <div>
-              <h3 class="rule__title">Молчание — золото</h3>
-              <p class="rule__text">И оплачивается по курсу золота.</p>
-            </div>
-          </li>
-          <li class="rule">
-            <span class="rule__num">2</span>
-            <div>
-              <h3 class="rule__title">Семья прежде всего</h3>
-              <p class="rule__text">Ваша или наша. Иногда это одна и та же семья.</p>
-            </div>
-          </li>
-          <li class="rule">
-            <span class="rule__num">3</span>
-            <div>
-              <h3 class="rule__title">Всё строго в рамках закона</h3>
-              <p class="rule__text">Рамки мы изучили очень внимательно.</p>
-            </div>
-          </li>
-        </ol>
-      </section>
-
-      <section class="tile testimonials" data-reveal aria-label="Отзывы клиентов">
-        <p class="eyebrow">Отзывы клиентов</p>
-        <div class="quotes">
-          <figure class="quote is-active">
-            <blockquote>«Мне сделали предложение, от которого прокурор не смог отказаться»</blockquote>
-            <figcaption>Дон К., клиент с 1998 года</figcaption>
-          </figure>
-          <figure class="quote">
-            <blockquote>«Меня не было на месте преступления. Рахман Султанович это доказал. Я до сих пор не понимаю, как»</blockquote>
-            <figcaption>Имя изменено по просьбе клиента</figcaption>
-          </figure>
-          <figure class="quote">
-            <blockquote>«Когда судья спросил, кто мой адвокат, в зале стало очень тихо»</blockquote>
-            <figcaption>Т. Б., предприниматель</figcaption>
-          </figure>
-        </div>
-      </section>
-
-    </main>
-
-    <!-- ===== Боковая панель ===== -->
-    <aside class="sidebar">
-
-      <section class="tile widget hotline" data-reveal>
-        <span class="live">Экстренная линия · 24/7</span>
-        <p>Вас задержали? Ничего не говорите. Просто позвоните.</p>
         <div>
-          <a class="hotline__phone" href="tel:+70007070707">+7 (000) 707-07-07</a>
-          <p class="hotline__note">Разговор не записывается.</p>
+          <h2 class="display">Чем мы занимаемся</h2>
+          <ul class="services">
+            <li class="service">
+              <h3>Уголовная защита</h3>
+              <p>От первого допроса до оправдательного приговора. Вы молчите, мы говорим.</p>
+            </li>
+            <li class="service">
+              <h3>Налоги и финансы</h3>
+              <p>Объясним налоговой, откуда деньги. Спокойно и с документами.</p>
+            </li>
+            <li class="service">
+              <h3>Семейный бизнес</h3>
+              <p>Сопровождаем предприятия, где партнёры приходятся друг другу родственниками.</p>
+            </li>
+            <li class="service">
+              <h3>Деликатные вопросы</h3>
+              <p>Свидетели, которые передумали. Долги, которые забылись. Подробности при встрече.</p>
+            </li>
+          </ul>
+          <a class="text-link" href="services.html">Все услуги</a>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <section class="tile widget" data-reveal>
-        <h2 class="widget__title">Часы приёма</h2>
-        <dl class="hours">
-          <div><dt>Пн — Пт</dt><dd>10:00 — 19:00</dd></div>
-          <div><dt>Суббота</dt><dd>по записи</dd></div>
-          <div><dt>Воскресенье</dt><dd>для семьи</dd></div>
-        </dl>
-      </section>
+    <!-- ===== Цифры одной фразой ===== -->
+    <section class="tile tile--claret facts" aria-label="Контора в цифрах">
+      <p class="facts__text" data-words>За 32 года мы выиграли 1&nbsp;214 дел. Закрыли 97 процентов из них, некоторые навсегда. И ни один наш клиент не дал показаний.</p>
+    </section>
 
-      <section class="tile widget" data-reveal>
-        <h2 class="widget__title">Новости</h2>
-        <ul class="news-list">
-          <li class="news-item">
-            <a href="news.html">
-              <time datetime="2026-09-21">21 сентября</time>
-              <span>Оправдательный приговор по делу о пропавшей фуре мандаринов. Фура тоже нашлась.</span>
-            </a>
-          </li>
-          <li class="news-item">
-            <a href="news.html">
-              <time datetime="2026-09-09">9 сентября</time>
-              <span>Открытая лекция «Право хранить молчание».</span>
-            </a>
-          </li>
-          <li class="news-item">
-            <a href="news.html">
-              <time datetime="2026-08-27">27 августа</time>
-              <span>Контора открыла второй кабинет. Вход со двора.</span>
-            </a>
-          </li>
-        </ul>
-        <a class="btn btn--ghost btn--block" href="news.html">Все новости</a>
-      </section>
+    <!-- ===== Правила дома ===== -->
+    <section class="tile tile--claret-2 rules">
+      <h2 class="display">Правила дома</h2>
+      <ul>
+        <li>Молчание золото. <span>Оплачивается по курсу золота.</span></li>
+        <li>Семья прежде всего. <span>Ваша или наша, иногда это одна семья.</span></li>
+        <li>Всё в рамках закона. <span>Рамки мы изучили очень внимательно.</span></li>
+        <li>Статья 51 Конституции. <span>Наша любимая.</span></li>
+      </ul>
+    </section>
 
-      <section class="tile widget join" data-reveal>
-        <img class="join__img" src="img/signature.jpg" width="640" height="480" alt="Рука с золотым перстнем подписывает договор перьевой ручкой" loading="lazy">
-        <h2 class="widget__title">Станьте клиентом</h2>
-        <p>Регистрация занимает минуту. Обязательства действуют всю жизнь.</p>
-        <a class="btn btn--primary btn--block" href="register.html">Зарегистрироваться <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
-      </section>
+    <!-- ===== Отзыв ===== -->
+    <section class="tile tile--velvet quote" aria-label="Отзыв клиента">
+      <figure>
+        <blockquote>«Мне сделали предложение, от которого прокурор не смог отказаться»</blockquote>
+        <figcaption>Дон К., клиент с 1998 года</figcaption>
+      </figure>
+    </section>
 
-    </aside>
-  </div>
+    <!-- ===== Регистрация ===== -->
+    <section class="tile tile--claret join">
+      <div class="photo">
+        <img src="img/signature.jpg" width="1712" height="760" alt="Рука с золотым перстнем подписывает договор перьевой ручкой" loading="lazy">
+      </div>
+      <h2 class="display">Станьте клиентом</h2>
+      <p>Регистрация занимает минуту. Обязательства действуют всю жизнь.</p>
+      <a class="btn" href="register.html">Зарегистрироваться</a>
+    </section>
+
+  </main>
 
   <!-- ===== Подвал ===== -->
-  <footer class="tile footer">
+  <footer class="footer">
     <div class="footer__top">
-      <div>
-        <a class="logo" href="index.html">
-          <span class="logo__mark" aria-hidden="true">R</span>
-          <span class="logo__name">Better Call Rahman</span>
-        </a>
-        <p class="footer__tagline">Адвокатская контора Рахмана Султановича. Решаем вопросы с 1994 года.</p>
+      <div class="footer__about">
+        <a class="wordmark" href="index.html">Better Call Rahman</a>
+        <p>Адвокатская контора Рахмана Султановича. Решаем вопросы с 1994 года.</p>
       </div>
       <nav aria-label="Разделы сайта">
-        <h2 class="footer__title">Разделы</h2>
-        <ul class="footer__menu">
+        <h2>Разделы</h2>
+        <ul>
           <li><a href="index.html">Главная</a></li>
           <li><a href="news.html">Новости</a></li>
           <li><a href="services.html">Услуги</a></li>
@@ -283,17 +190,17 @@
         </ul>
       </nav>
       <div>
-        <h2 class="footer__title">Контакты</h2>
+        <h2>Контакты</h2>
         <address>
           <span>ул. Тихая, 7, вход со двора</span>
           <a href="tel:+70007070707">+7 (000) 707-07-07</a>
-          <span>Пн — Пт, 10:00 — 19:00</span>
+          <span>Пн-Пт, 10:00-19:00</span>
         </address>
       </div>
     </div>
-    <div class="footer__bottom">
-      <span>© 1994 — 2026 Better Call Rahman</span>
-      <span>Учебный проект, вариант № 7 «Адвокатская контора». Все персонажи и события вымышлены.</span>
+    <div class="footer__legal">
+      <span>© 1994-2026 Better Call Rahman</span>
+      <span>Учебный проект, вариант 7 «Адвокатская контора». Все персонажи и события вымышлены.</span>
     </div>
   </footer>
 
